@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKYC Document Validator - ID Card & Legal Documents</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #4facfe;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #4facfe;
+            background: #f0f8ff;
+        }
+
+        .upload-section.dragover {
+            border-color: #28a745;
+            background: #f0fff0;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .upload-section.dragover .upload-icon {
+            color: #28a745;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .validate-button {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .validate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .validate-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .file-preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            display: none;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            color: #4facfe;
+        }
+
+        .file-details h4 {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .file-details p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4facfe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4facfe;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 20px;
+        }
+
+        .result-status {
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+
+        .status-valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .info-box h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .extracted-fields {
+            margin-top: 20px;
+        }
+
+        .field-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .field-item:last-child {
+            border-bottom: none;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .field-value {
+            color: #6c757d;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .array-item {
+            background: #e3f2fd;
+            padding: 4px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border-left: 3px solid #2196f3;
+        }
+
+        .field-value .array-item:first-child {
+            margin-top: 0;
+        }
+
+        .field-value .array-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .fields-grid .field-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-bottom: none;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .fields-grid .field-label {
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .fields-grid .field-value {
+            text-align: left;
+            max-width: 100%;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .animate__fadeIn {
+            animation-duration: 0.5s;
+        }
+
+        .animate__bounceIn {
+            animation-duration: 0.8s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> AI-Driven eKYC</h1>
+            <p>ID Card and Legal Document Validation with AI and RAG Technology</p>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('ktp')">
+                    <i class="fas fa-id-card"></i>
+                    ID Card Validation
+                </button>
+                <button class="tab-button" onclick="switchTab('akta')">
+                    <i class="fas fa-file-contract"></i>
+                    Legal Document Validation
+                </button>
+             <!--    <a href="metrics.html" class="tab-button" style="text-decoration: none;">
+                    <i class="fas fa-chart-bar"></i>
+                    AI vs Manual Metrics
+                </a> -->
+            </div>
+
+            <!-- KTP Tab -->
+            <div id="ktp-tab" class="tab-content active">
+                <div class="upload-section" ondrop="dropHandler(event, 'ktp')" ondragover="dragOverHandler(event)" ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Upload ID Card Image</h3>
+                    <p>Drag & drop your ID card image or click the button below</p>
+                    <p style="font-size: 0.9rem; color: #6c757d; margin-top: 10px;">
+                        Supported formats: JPG, PNG, JPEG, BMP, TIFF
+                    </p>
+                    <input type="file" id="ktp-file" class="file-input" accept="image/*" onchange="handleFileSelect(event, 'ktp')">
+                    <button class="upload-button" onclick="document.getElementById('ktp-file').click()">
+                        <i class="fas fa-folder-open"></i> Select ID Card File
+                    </button>
+                </div>
+
+                <div id="ktp-preview" class="file-preview"></div>
+                
+                <div style="text-align: center;">
+                    <button id="ktp-validate" class="validate-button" onclick="validateDocument('ktp')">
+                        <i class="fas fa-check-circle"></i> Validate ID Card
+                    </button>
+                </div>
+
+                <div id="ktp-loading" class="loading">
+                    <div class="spinner"></div>
+                    <h3>Processing ID Card...</h3>
+                    <p>Using 10 preprocessing methods and 2 OCR engines</p>
+                </div>
+
+                <div id="ktp-results" class="results"></div>
+            </div>
+
+            <!-- Akta Tab -->
+            <div id="akta-tab" class="tab-content">
+                <div class="upload-section" ondrop="dropHandler(event, 'akta')" ondragover="dragOverHandler(event)" ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)">
+                    <i class="fas fa-file-pdf upload-icon"></i>
+                    <h3>Upload Legal Document</h3>
+                    <p>Drag & drop your legal document or click the button below</p>
+                    <p style="font-size: 0.9rem; color: #6c757d; margin-top: 10px;">
+                        Supported formats: PDF
+                    </p>
+                    <input type="file" id="akta-file" class="file-input" accept=".pdf" onchange="handleFileSelect(event, 'akta')">
+                    <button class="upload-button" onclick="document.getElementById('akta-file').click()">
+                        <i class="fas fa-folder-open"></i> Select Legal Document
+                    </button>
+                </div>
+
+                <div id="akta-preview" class="file-preview"></div>
+                
+                <div style="text-align: center;">
+                    <button id="akta-validate" class="validate-button" onclick="validateDocument('akta')">
+                        <i class="fas fa-check-circle"></i> Validate Document
+                    </button>
+                </div>
+
+                <div id="akta-loading" class="loading">
+                    <div class="spinner"></div>
+                    <h3>Processing Legal Document...</h3>
+                    <p>Extracting and analyzing document structure</p>
+                </div>
+
+                <div id="akta-results" class="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = {
+            ktp: null,
+            akta: null
+        };
+
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function dragOverHandler(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function dragEnterHandler(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function dragLeaveHandler(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function dropHandler(event, type) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0], type);
+            }
+        }
+
+        function handleFileSelect(event, type) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                handleFile(files[0], type);
+            }
+        }
+
+        function handleFile(file, type) {
+            selectedFiles[type] = file;
+            
+            // Show file preview
+            const preview = document.getElementById(type + '-preview');
+            const validateButton = document.getElementById(type + '-validate');
+            
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            const fileIcon = type === 'ktp' ? 'fas fa-image' : 'fas fa-file-pdf';
+            
+            preview.innerHTML = `
+                <div class="file-info animate__animated animate__fadeIn">
+                    <i class="${fileIcon} file-icon"></i>
+                    <div class="file-details">
+                        <h4>${file.name}</h4>
+                        <p>Size: ${fileSize} MB | Type: ${file.type}</p>
+                    </div>
+                </div>
+            `;
+            
+            preview.style.display = 'block';
+            validateButton.style.display = 'inline-block';
+            
+            // Add animation
+            preview.classList.add('animate__animated', 'animate__fadeIn');
+        }
+
+        async function validateDocument(type) {
+            const file = selectedFiles[type];
+            if (!file) {
+                showAlert('error', 'Please select a file first');
+                return;
+            }
+
+            // Record start time
+            const startTime = performance.now();
+            
+            // Show loading with timer
+            const loadingElement = document.getElementById(type + '-loading');
+            const timerElement = document.createElement('div');
+            timerElement.style.marginTop = '10px';
+            timerElement.style.color = '#6c757d';
+            timerElement.style.fontSize = '14px';
+            loadingElement.appendChild(timerElement);
+            
+            // Update timer every 100ms
+            const timerInterval = setInterval(() => {
+                const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+                timerElement.textContent = `⏱️ Processing: ${elapsed} seconds`;
+            }, 100);
+            
+            loadingElement.style.display = 'block';
+            document.getElementById(type + '-results').style.display = 'none';
+            document.getElementById(type + '-validate').disabled = true;
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // Call API
+                const response = await fetch(`http://localhost:8001/validate/${type}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                // Calculate total processing time
+                const endTime = performance.now();
+                const processingTime = ((endTime - startTime) / 1000).toFixed(2);
+                result.processing_time_seconds = parseFloat(processingTime);
+
+                // Clear timer
+                clearInterval(timerInterval);
+
+                // Hide loading
+                loadingElement.style.display = 'none';
+                if (timerElement.parentNode) {
+                    timerElement.remove();
+                }
+                document.getElementById(type + '-validate').disabled = false;
+
+                // Show results
+                displayResults(result, type);
+
+            } catch (error) {
+                // Clear timer
+                clearInterval(timerInterval);
+                
+                // Hide loading
+                loadingElement.style.display = 'none';
+                if (timerElement.parentNode) {
+                    timerElement.remove();
+                }
+                document.getElementById(type + '-validate').disabled = false;
+
+                // Show error
+                showAlert('error', 'An error occurred while validating the document: ' + error.message);
+            }
+        }
+
+        function displayResults(result, type) {
+            const resultsContainer = document.getElementById(type + '-results');
+            
+            if (type === 'ktp') {
+                displayKTPResults(result, resultsContainer);
+            } else {
+                displayAktaResults(result, resultsContainer);
+            }
+            
+            resultsContainer.style.display = 'block';
+            resultsContainer.classList.add('animate__animated', 'animate__fadeIn');
+        }
+
+        function displayKTPResults(result, container) {
+            const status = result.status || 'UNKNOWN';
+            const confidence = result.confidence || 0;
+            const details = result.validation_details || {};
+            const extractedFields = details.extracted_fields || {};
+            
+            const statusClass = status === 'VALID' ? 'status-valid' : 
+                              status === 'PARTIAL' ? 'status-partial' : 'status-invalid';
+            
+            const statusIcon = status === 'VALID' ? 'fas fa-check-circle' : 
+                              status === 'PARTIAL' ? 'fas fa-exclamation-triangle' : 'fas fa-times-circle';
+
+            container.innerHTML = `
+                <div class="result-card animate__animated animate__bounceIn">
+                    <div class="result-header">
+                        <h3><i class="fas fa-id-card"></i> ID Card Validation Results</h3>
+                        <span class="result-status ${statusClass}">
+                            <i class="${statusIcon}"></i> ${status}
+                        </span>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="info-box">
+                            <h4><i class="fas fa-chart-line"></i> Confidence Score</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${confidence * 100}%">
+                                    ${(confidence * 100).toFixed(1)}%
+                                </div>
+                            </div>
+                            <p>System confidence level in the validation results</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-bullseye"></i> Accuracy Rate</h4>
+                            <div class="metric-display">
+                                <span class="metric-value">${result.accuracy_rate || (confidence * 100).toFixed(1)}%</span>
+                                <span class="metric-label">AI Extraction Accuracy</span>
+                            </div>
+                            <p>Estimated accuracy of field extraction</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-stopwatch"></i> Processing Time</h4>
+                            <div class="metric-display">
+                                <span class="metric-value">${result.avg_processing_time || result.processing_time_seconds || 'N/A'}s</span>
+                                <span class="metric-label">Average Time</span>
+                            </div>
+                            <p>Time taken for complete validation</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-microchip"></i> Processing Method</h4>
+                            <p><strong>OCR Engine:</strong> ${details.method_used || 'Enhanced Multi-Method'}</p>
+                            <p><strong>Preprocessing:</strong> 10 enhancement methods</p>
+                            <p><strong>Quality Score:</strong> ${details.quality_score || 'N/A'}</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-tasks"></i> Data Completeness</h4>
+                            <p><strong>Fields Found:</strong> ${Object.keys(extractedFields).length} fields</p>
+                            <p><strong>Status:</strong> ${details.completeness_status || 'Unknown'}</p>
+                            <p><strong>Quality:</strong> ${details.extraction_quality || 'Good'}</p>
+                        </div>
+                    </div>
+                    
+                    ${Object.keys(extractedFields).length > 0 ? `
+                        <div class="extracted-fields">
+                            <h4><i class="fas fa-list"></i> Extracted Data</h4>
+                            ${Object.entries(extractedFields).map(([key, value]) => `
+                                <div class="field-item">
+                                    <span class="field-label">${key.replace(/_/g, ' ')}</span>
+                                    <span class="field-value">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${details.ai_analysis ? `
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4><i class="fas fa-robot"></i> AI Analysis</h4>
+                            <p>${details.ai_analysis}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${result.processing_time_seconds ? `
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4><i class="fas fa-clock"></i> Processing Time</h4>
+                            <p><strong>Total Time:</strong> ${result.processing_time_seconds} seconds</p>
+                            <p><strong>Speed:</strong> ${result.processing_time_seconds < 5 ? 'Very Fast' : 
+                                                         result.processing_time_seconds < 10 ? 'Fast' : 
+                                                         result.processing_time_seconds < 20 ? 'Normal' : 'Slow'}</p>
+                            <p><strong>Processed at:</strong> ${result.processed_at ? new Date(result.processed_at).toLocaleString('en-US') : new Date().toLocaleString('en-US')}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${details.issues_found && details.issues_found.length > 0 ? `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Issues Found:</strong>
+                                <ul style="margin-top: 10px; margin-left: 20px;">
+                                    ${details.issues_found.map(issue => `<li>${issue}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayAktaResults(result, container) {
+            const status = result.status || 'UNKNOWN';
+            const confidence = result.confidence || 0;
+            const details = result.validation_details || {};
+            const extractedFields = details.extracted_fields || {};
+            
+            const statusClass = status === 'VALID' ? 'status-valid' : 
+                              status === 'PARTIAL' ? 'status-partial' : 'status-invalid';
+            
+            const statusIcon = status === 'VALID' ? 'fas fa-check-circle' : 
+                              status === 'PARTIAL' ? 'fas fa-exclamation-triangle' : 'fas fa-times-circle';
+
+            container.innerHTML = `
+                <div class="result-card animate__animated animate__bounceIn">
+                    <div class="result-header">
+                        <h3><i class="fas fa-file-contract"></i> Legal Document Validation Results</h3>
+                        <span class="result-status ${statusClass}">
+                            <i class="${statusIcon}"></i> ${status}
+                        </span>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="info-box">
+                            <h4><i class="fas fa-chart-line"></i> Confidence Score</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${confidence * 100}%">
+                                    ${(confidence * 100).toFixed(1)}%
+                                </div>
+                            </div>
+                            <p>System confidence level in the validation results</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-bullseye"></i> Accuracy Rate</h4>
+                            <div class="metric-display">
+                                <span class="metric-value">${result.accuracy_rate || (confidence * 100).toFixed(1)}%</span>
+                                <span class="metric-label">AI Validation Accuracy</span>
+                            </div>
+                            <p>Estimated accuracy of document validation</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-stopwatch"></i> Processing Time</h4>
+                            <div class="metric-display">
+                                <span class="metric-value">${result.avg_processing_time || result.processing_time_seconds || 'N/A'}s</span>
+                                <span class="metric-label">Average Time</span>
+                            </div>
+                            <p>Time taken for complete validation</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-file-alt"></i> Document Statistics</h4>
+                            <p><strong>Total Characters:</strong> ${details.total_characters || 'N/A'}</p>
+                            <p><strong>Total Pages:</strong> ${details.total_pages || 'N/A'}</p>
+                            <p><strong>Processing Method:</strong> ${details.processing_method || 'PDF + OCR Enhanced'}</p>
+                            <p><strong>Extraction Quality:</strong> ${details.extraction_quality || 'Good'}</p>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-tasks"></i> Completeness</h4>
+                            <p><strong>Status:</strong> ${details.completeness_status || 'N/A'}</p>
+                            <p><strong>Field Count:</strong> ${Object.keys(extractedFields).length || 0}</p>
+                            <p><strong>Structure:</strong> ${details.document_structure ? 'Valid' : 'Valid'}</p>
+                        </div>
+                    </div>
+                    
+                    ${Object.keys(extractedFields).length > 0 ? `
+                        <div class="extracted-fields">
+                            <h4><i class="fas fa-list"></i> Document Information</h4>
+                            ${Object.entries(extractedFields).map(([key, value]) => {
+                                // Special handling for arrays (direktur, komisaris)
+                                if (Array.isArray(value)) {
+                                    return `
+                                        <div class="field-item">
+                                            <span class="field-label">${key.replace(/_/g, ' ')}</span>
+                                            <span class="field-value">
+                                                ${value.length > 0 ? value.map(item => `<div class="array-item">${item}</div>`).join('') : 'Not specified'}
+                                            </span>
+                                        </div>
+                                    `;
+                                } else {
+                                    return `
+                                        <div class="field-item">
+                                            <span class="field-label">${key.replace(/_/g, ' ')}</span>
+                                            <span class="field-value">${value || 'Not specified'}</span>
+                                        </div>
+                                    `;
+                                }
+                            }).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${details.ai_analysis ? `
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4><i class="fas fa-robot"></i> AI Analysis</h4>
+                            <p>${details.ai_analysis}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${result.processing_time_seconds ? `
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4><i class="fas fa-clock"></i> Processing Time</h4>
+                            <p><strong>Total Time:</strong> ${result.processing_time_seconds} seconds</p>
+                            <p><strong>Speed:</strong> ${result.processing_time_seconds < 8 ? 'Very Fast' : 
+                                                         result.processing_time_seconds < 15 ? 'Fast' : 
+                                                         result.processing_time_seconds < 30 ? 'Normal' : 'Slow'}</p>
+                            <p><strong>Processed at:</strong> ${result.processed_at ? new Date(result.processed_at).toLocaleString('en-US') : new Date().toLocaleString('en-US')}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${details.issues_found && details.issues_found.length > 0 ? `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Issues Found:</strong>
+                                <ul style="margin-top: 10px; margin-left: 20px;">
+                                    ${details.issues_found.map(issue => `<li>${issue}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function showAlert(type, message) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'warning' ? 'alert-warning' : 'alert-error';
+            
+            const alertIcon = type === 'success' ? 'fas fa-check-circle' : 
+                            type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-times-circle';
+            
+            const alertHtml = `
+                <div class="alert ${alertClass} animate__animated animate__fadeIn">
+                    <i class="${alertIcon}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Show alert at the top of the current tab
+            const activeTab = document.querySelector('.tab-content.active');
+            activeTab.insertAdjacentHTML('afterbegin', alertHtml);
+            
+            // Remove alert after 5 seconds
+            setTimeout(() => {
+                const alert = activeTab.querySelector('.alert');
+                if (alert) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Demo data functions removed - using real backend API only
+        // The validateDocument function calls the actual API endpoints
+
+        // Demo mode removed - using real backend API
+        // The real validateDocument function above will be used
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+Ini adalah dokumen test untuk sistem eKYC.
+
+Sistem eKYC (Electronic Know Your Customer) adalah proses verifikasi identitas customer secara digital. 
+
+Komponen utama sistem eKYC:
+1. Document Upload - Upload dokumen identitas seperti KTP, SIM, Paspor
+2. AI Analysis - Analisis dokumen menggunakan artificial intelligence
+3. OCR Processing - Optical Character Recognition untuk ekstraksi teks
+4. Data Validation - Validasi data yang diekstrak
+5. Risk Assessment - Penilaian risiko berdasarkan data
+6. Knowledge Base - Database pengetahuan untuk RAG system
+
+Proses Verifikasi:
+- Customer upload dokumen
+- Sistem melakukan OCR dan ekstraksi data
+- AI melakukan analisis dan validasi
+- Sistem memberikan status verification
+- Admin dapat melakukan manual review jika diperlukan
+
+Status Verification:
+- VERIFIED: Dokumen terverifikasi dengan confidence tinggi
+- PENDING: Perlu review manual
+- REJECTED: Dokumen tidak valid
+
+Fitur RAG (Retrieval Augmented Generation):
+- Search knowledge base
+- AI-powered question answering
+- Context-aware responses
+- Document embedding dan vector search

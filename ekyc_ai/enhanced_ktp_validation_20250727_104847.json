@@ -1,0 +1,90 @@
+{
+  "timestamp": "2025-07-27T10:48:47.473321",
+  "processor_type": "enhanced_multi_method",
+  "total_files": 2,
+  "successful_validations": 2,
+  "results": [
+    {
+      "file_name": "ktp2.png",
+      "extraction_method": "original_gray + EasyOCR",
+      "ocr_confidence": 0.8153538268011873,
+      "quality_score": 357.3206610573523,
+      "full_text": "KARTU TANDA PENDUDUK DAERAM KHUSUS-IBU KOTA JAKARTA 3171042106860001 NIK: ANDI WID BWO Tencau Tgı Eunu: JAKARTA, 21-99-1896 Jonb Kaisnın: LAK |-LAKI Akunı NITAN MERDEKA NO, 10 Ket-Bess 0871867 Keperiatan KEMGANGAN SELATAN Kgera KEDUM JERUK Staisa Perkauniuñ KAMIM PEBLKUM SMMASTA Pekeriaan PEGAWAI SWASTA SEUMOR HIDUP Beriaku Hingga",
+      "text_length": 332,
+      "structured_fields": {},
+      "alternative_methods": 10,
+      "processing_details": {
+        "total_methods_tried": 10,
+        "successful_extractions": 10,
+        "confidence_range": [
+          0.5176257285231979,
+          0.8258409908501583
+        ]
+      },
+      "ai_validation": {
+        "success": false,
+        "error": "'DocumentValidator' object has no attribute 'validate_document'"
+      },
+      "validation_score": {
+        "required_found": 0,
+        "required_total": 7,
+        "required_percentage": 0.0,
+        "optional_found": 0,
+        "optional_total": 3,
+        "optional_percentage": 0.0,
+        "overall_percentage": 0.0,
+        "status": "INCOMPLETE"
+      },
+      "final_status": "NEEDS_REVIEW",
+      "success": true
+    },
+    {
+      "file_name": "ktp3.png",
+      "extraction_method": "original_gray + EasyOCR",
+      "ocr_confidence": 0.8285284900487647,
+      "quality_score": 744.9796771122474,
+      "full_text": "PROVINSI TEMPAT ANDA KOTA ANDA NIK 529643389000738 Nama Nama Asli Anda TempatTgl Lahir Kota Lahir 07 07 1997 Jenis kelamin Laki Laki Perempuan Alamat Alamat Lengkap RTIRW 01/09 KeVDesa Kelurahan Anda Kocamatan Kocamatan Anda Agama Agama Status Perkawinan Kawin Belum Kawin KOTA ANDA Pokerjaan Pokorjaan Anda Kowarganogaraan WNI Berlaku Hingga Seumur Hidup 5 ARTU TANE TAND RTU PENG",
+      "text_length": 381,
+      "structured_fields": {
+        "nama": "NAMA ASLI ANDA TEMPATTGL LAHIR KOTA LAHIR",
+        "tempat_lahir": "",
+        "alamat": "ALAMAT LENGKAP RTIRW 01/09 KEVDESA KELURAHAN ANDA KOCAMATAN KOCAMATAN ANDA AGAMA AGAMA STATUS PERKAWINAN KAWIN BELUM KAWIN KOTA ANDA POKERJAAN POKORJAAN ANDA KOWARGANOGARAAN WNI BERLAKU HINGGA SEUMUR HIDUP 5 ARTU TANE TAND RTU PENG",
+        "agama": "AGAMA STATUS PERKAWINAN KAWIN BELUM KAWIN KOTA ANDA POKERJAAN POKORJAAN ANDA KOWARGANOGARAAN WNI BERLAKU HINGGA SEUMUR HIDUP",
+        "status_kawin": "KAWIN BELUM KAWIN KOTA ANDA POKERJAAN POKORJAAN ANDA KOWARGANOGARAAN WNI BERLAKU HINGGA SEUMUR HIDUP"
+      },
+      "alternative_methods": 10,
+      "processing_details": {
+        "total_methods_tried": 10,
+        "successful_extractions": 10,
+        "confidence_range": [
+          0.3900948609538553,
+          0.8647385787272662
+        ]
+      },
+      "ai_validation": {
+        "success": false,
+        "error": "'DocumentValidator' object has no attribute 'validate_document'"
+      },
+      "validation_score": {
+        "required_found": 3,
+        "required_total": 7,
+        "required_percentage": 42.857142857142854,
+        "optional_found": 1,
+        "optional_total": 3,
+        "optional_percentage": 33.33333333333333,
+        "overall_percentage": 40.95238095238095,
+        "status": "INCOMPLETE"
+      },
+      "final_status": "NEEDS_REVIEW",
+      "success": true
+    }
+  ],
+  "enhancement_summary": {
+    "preprocessing_methods": 10,
+    "ocr_engines": 2,
+    "total_combinations": 20,
+    "quality_scoring": true,
+    "keyword_bonus": true,
+    "field_extraction": true
+  }
+}

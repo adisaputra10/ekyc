@@ -1,0 +1,63 @@
+{
+  "name": "ekyc-blockchain",
+  "version": "1.0.0",
+  "description": "eKYC Blockchain Verification System - A decentralized identity verification system using blockchain technology",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -l 8000",
+    "dev": "npx live-server --port=8000 --entry-file=index.html",
+    "build": "echo 'No build process needed for vanilla HTML/CSS/JS'",
+    "test": "echo 'No tests configured yet'",
+    "lint": "echo 'Linting not configured'",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "ekyc",
+    "blockchain",
+    "identity-verification",
+    "web3",
+    "smart-contracts",
+    "biometric",
+    "document-verification",
+    "decentralized",
+    "nft",
+    "verification-token"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ekyc-blockchain.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/ekyc-blockchain/issues"
+  },
+  "homepage": "https://github.com/your-username/ekyc-blockchain#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "index.html",
+    "dashboard.html",
+    "styles.css",
+    "dashboard.css",
+    "app.js",
+    "dashboard.js",
+    "blockchain-utils.js",
+    "smart-contract.js",
+    "demo-data.js",
+    "README.md",
+    "API-DOCS.md",
+    "DEMO-GUIDE.md"
+  ]
+}

@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}eKYC System - Beranda{% endblock %}
+
+{% block content %}
+<div id="alertContainer"></div>
+
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 bg-gradient" style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: white;">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-shield-alt fa-4x mb-4 opacity-75"></i>
+                <h1 class="display-4 fw-bold mb-3">eKYC System</h1>
+                <p class="lead mb-4">Sistem verifikasi identitas elektronik yang aman, cepat, dan terpercaya dengan teknologi AI dan RAG</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <a href="/upload" class="btn btn-light btn-lg">
+                                <i class="fas fa-upload me-2"></i>
+                                Upload Dokumen
+                            </a>
+                            <a href="/form" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-file-alt me-2"></i>
+                                Form eKYC
+                            </a>
+                            <a href="/rag" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-robot me-2"></i>
+                                AI Assistant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-star text-warning me-2"></i>
+            Fitur Unggulan
+        </h2>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-eye fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">OCR Canggih</h5>
+                <p class="card-text">Ekstraksi teks otomatis dari dokumen dengan akurasi tinggi menggunakan Tesseract dan EasyOCR</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-brain fa-3x text-success"></i>
+                </div>
+                <h5 class="card-title">AI Analysis</h5>
+                <p class="card-text">Analisis dokumen cerdas dengan DeepSeek LLM untuk deteksi anomali dan validasi</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-3x text-info"></i>
+                </div>
+                <h5 class="card-title">RAG System</h5>
+                <p class="card-text">Knowledge base dengan Elasticsearch untuk pertanyaan dan pencarian semantik</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-shield-alt fa-3x text-warning"></i>
+                </div>
+                <h5 class="card-title">Keamanan Tinggi</h5>
+                <p class="card-text">Enkripsi data dan validasi multi-layer untuk melindungi informasi pribadi</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h3 class="text-center mb-4">
+            <i class="fas fa-rocket text-primary me-2"></i>
+            Mulai Sekarang
+        </h3>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>
+                    Upload & Analisis Dokumen
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>Upload dokumen identitas Anda untuk analisis otomatis dengan AI</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i>Ekstraksi data otomatis</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Validasi keaslian</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Deteksi anomali</li>
+                </ul>
+                <a href="/upload" class="btn btn-primary">
+                    <i class="fas fa-upload me-2"></i>
+                    Upload Dokumen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-robot me-2"></i>
+                    AI Assistant & RAG
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>Tanyakan apa saja tentang proses eKYC kepada AI assistant kami</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i>Pertanyaan real-time</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Knowledge base lengkap</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Bantuan 24/7</li>
+                </ul>
+                <a href="/rag" class="btn btn-success">
+                    <i class="fas fa-robot me-2"></i>
+                    Chat dengan AI
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Statistik Sistem
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <h3 class="text-primary mb-1" id="documentsProcessed">-</h3>
+                        <small class="text-muted">Dokumen Diproses</small>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-success mb-1" id="accuracyRate">-</h3>
+                        <small class="text-muted">Tingkat Akurasi</small>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-info mb-1" id="knowledgeEntries">-</h3>
+                        <small class="text-muted">Knowledge Base</small>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-warning mb-1" id="systemUptime">-</h3>
+                        <small class="text-muted">System Uptime</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load system statistics
+    loadStatistics();
+    
+    // Check system health
+    checkSystemHealth();
+});
+
+async function loadStatistics() {
+    try {
+        const response = await fetch('/api/statistics');
+        if (response.ok) {
+            const stats = await response.json();
+            document.getElementById('documentsProcessed').textContent = stats.documents_processed || '0';
+            document.getElementById('accuracyRate').textContent = (stats.accuracy_rate || 0).toFixed(1) + '%';
+            document.getElementById('knowledgeEntries').textContent = stats.knowledge_entries || '0';
+            document.getElementById('systemUptime').textContent = stats.uptime || '0h';
+        }
+    } catch (error) {
+        console.error('Error loading statistics:', error);
+    }
+}
+
+async function checkSystemHealth() {
+    try {
+        const response = await fetch('/api/health');
+        if (response.ok) {
+            const health = await response.json();
+            if (health.status === 'healthy') {
+                showAlert('Sistem berjalan dengan baik', 'success');
+            }
+        } else {
+            showAlert('Terdapat masalah pada sistem', 'warning');
+        }
+    } catch (error) {
+        showAlert('Tidak dapat mengecek status sistem', 'danger');
+    }
+}
+</script>
+{% endblock %}

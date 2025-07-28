@@ -1,0 +1,32 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "liveServer.settings.port": 8000,
+        "liveServer.settings.CustomBrowser": "chrome",
+        "liveServer.settings.donotShowInfoMsg": true,
+        "html.format.indentInnerHtml": true,
+        "html.format.indentHandlebars": true,
+        "css.validate": true,
+        "javascript.validate.enable": true,
+        "files.associations": {
+            "*.js": "javascript",
+            "*.html": "html",
+            "*.css": "css"
+        },
+        "emmet.includeLanguages": {
+            "javascript": "javascriptreact"
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.live-server",
+            "bradlc.vscode-tailwindcss",
+            "esbenp.prettier-vscode",
+            "ms-vscode.vscode-json"
+        ]
+    }
+}

@@ -1,0 +1,497 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant - eKYC System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        height: 500px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        background: #f8fafc;
+    }
+    
+    .message {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        max-width: 80%;
+        word-wrap: break-word;
+    }
+    
+    .message.user {
+        background: var(--primary-color);
+        color: white;
+        margin-left: auto;
+        text-align: right;
+    }
+    
+    .message.assistant {
+        background: white;
+        border: 1px solid #e2e8f0;
+        margin-right: auto;
+    }
+    
+    .message .timestamp {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 0.5rem;
+    }
+    
+    .typing-indicator {
+        display: none;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        max-width: 80%;
+    }
+    
+    .typing-dots {
+        display: inline-block;
+    }
+    
+    .typing-dots span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--secondary-color);
+        margin: 0 2px;
+        opacity: 0.4;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+    
+    .quick-questions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .quick-question {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-question:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
+    .knowledge-sources {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .source-item {
+        display: inline-block;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.25rem 0.5rem;
+        margin: 0.25rem;
+        font-size: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="alertContainer"></div>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="h3 mb-1">
+                    <i class="fas fa-robot text-primary me-2"></i>
+                    AI Assistant
+                </h1>
+                <p class="text-muted mb-0">Tanyakan apa saja tentang proses eKYC kepada AI assistant kami</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary" onclick="clearChat()">
+                    <i class="fas fa-trash me-2"></i>
+                    Clear Chat
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Chat Container -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments me-2"></i>
+                        Chat dengan AI
+                    </h5>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2">
+                            <i class="fas fa-circle"></i>
+                            Online
+                        </span>
+                        <small class="text-muted">Powered by DeepSeek</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <!-- Quick Questions -->
+                <div class="p-3 border-bottom">
+                    <label class="form-label fw-bold mb-2">Pertanyaan Cepat:</label>
+                    <div class="quick-questions">
+                        <span class="quick-question" onclick="askQuestion('Apa saja persyaratan untuk membuat KTP?')">
+                            Persyaratan KTP
+                        </span>
+                        <span class="quick-question" onclick="askQuestion('Bagaimana cara validasi NIK?')">
+                            Validasi NIK
+                        </span>
+                        <span class="quick-question" onclick="askQuestion('Dokumen apa saja yang diterima sistem eKYC?')">
+                            Dokumen yang Diterima
+                        </span>
+                        <span class="quick-question" onclick="askQuestion('Bagaimana proses verifikasi eKYC?')">
+                            Proses Verifikasi
+                        </span>
+                        <span class="quick-question" onclick="askQuestion('Apa itu OCR dan bagaimana cara kerjanya?')">
+                            Tentang OCR
+                        </span>
+                        <span class="quick-question" onclick="askQuestion('Bagaimana keamanan data dijamin?')">
+                            Keamanan Data
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-container" id="chatContainer">
+                    <div class="message assistant">
+                        <div>
+                            <i class="fas fa-robot me-2"></i>
+                            Halo! Saya adalah AI Assistant untuk sistem eKYC. Saya dapat membantu Anda dengan:
+                            <ul class="mt-2 mb-0">
+                                <li>Persyaratan dokumen identitas</li>
+                                <li>Proses verifikasi eKYC</li>
+                                <li>Cara upload dan analisis dokumen</li>
+                                <li>Troubleshooting masalah sistem</li>
+                                <li>Informasi keamanan dan privasi</li>
+                            </ul>
+                            Silakan ajukan pertanyaan Anda!
+                        </div>
+                        <div class="timestamp">Just now</div>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="ms-2">AI sedang mengetik...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Message Input -->
+                <div class="d-flex gap-2">
+                    <input type="text" id="messageInput" class="form-control" 
+                           placeholder="Ketik pertanyaan Anda di sini..." 
+                           onkeypress="handleKeyPress(event)">
+                    <button type="button" class="btn btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Knowledge Base Info -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-database me-2"></i>
+                    Knowledge Base
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">Status:</small>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2">Active</span>
+                        <small id="knowledgeStatus">Ready to answer questions</small>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Available Topics:</small>
+                    <div class="mt-2">
+                        <span class="badge bg-light text-dark me-1 mb-1">Dokumen Identitas</span>
+                        <span class="badge bg-light text-dark me-1 mb-1">Validasi</span>
+                        <span class="badge bg-light text-dark me-1 mb-1">Proses eKYC</span>
+                        <span class="badge bg-light text-dark me-1 mb-1">Keamanan</span>
+                        <span class="badge bg-light text-dark me-1 mb-1">Troubleshooting</span>
+                        <span class="badge bg-light text-dark me-1 mb-1">API & Integrasi</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <small class="text-muted">Last Updated:</small>
+                    <div id="lastUpdated">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Statistics -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Chat Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary mb-1" id="totalQuestions">0</h4>
+                        <small class="text-muted">Questions Asked</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success mb-1" id="avgResponseTime">-</h4>
+                        <small class="text-muted">Avg Response</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Topics -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Topics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="recentTopics">
+                    <p class="text-muted text-center">No recent topics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let chatHistory = [];
+let questionCount = 0;
+let responseTimes = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadChatHistory();
+    updateStatistics();
+    checkKnowledgeBaseStatus();
+});
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function askQuestion(question) {
+    document.getElementById('messageInput').value = question;
+    sendMessage();
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message to chat
+    addMessageToChat('user', message);
+    input.value = '';
+    
+    // Show typing indicator
+    showTypingIndicator(true);
+    
+    const startTime = Date.now();
+    
+    try {
+        const response = await fetch('/api/rag/query/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: message })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            const responseTime = Date.now() - startTime;
+            
+            // Add assistant response
+            addMessageToChat('assistant', result.answer, result.sources);
+            
+            // Update statistics
+            questionCount++;
+            responseTimes.push(responseTime);
+            updateStatistics();
+            
+            // Save to history
+            chatHistory.push({
+                user: message,
+                assistant: result.answer,
+                timestamp: new Date().toISOString(),
+                sources: result.sources || []
+            });
+            saveChatHistory();
+            
+        } else {
+            const error = await response.json();
+            addMessageToChat('assistant', 'Maaf, terjadi kesalahan: ' + (error.detail || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Chat error:', error);
+        addMessageToChat('assistant', 'Maaf, tidak dapat terhubung ke server. Silakan coba lagi.');
+    }
+    
+    showTypingIndicator(false);
+}
+
+function addMessageToChat(sender, message, sources = null) {
+    const chatContainer = document.getElementById('chatContainer');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+    
+    let html = `<div>${message}</div>`;
+    
+    // Add sources if available
+    if (sources && sources.length > 0) {
+        html += `
+            <div class="knowledge-sources">
+                <small class="text-muted">
+                    <i class="fas fa-book me-1"></i>
+                    Sources:
+                </small>
+                <div>
+                    ${sources.map(source => `<span class="source-item">${source}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `<div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
+    messageDiv.innerHTML = html;
+    
+    // Remove typing indicator before adding message
+    const typingIndicator = document.getElementById('typingIndicator');
+    if (typingIndicator.style.display !== 'none') {
+        chatContainer.insertBefore(messageDiv, typingIndicator);
+    } else {
+        chatContainer.appendChild(messageDiv);
+    }
+    
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function showTypingIndicator(show) {
+    const typingIndicator = document.getElementById('typingIndicator');
+    const chatContainer = document.getElementById('chatContainer');
+    
+    if (show) {
+        typingIndicator.style.display = 'block';
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    } else {
+        typingIndicator.style.display = 'none';
+    }
+}
+
+function clearChat() {
+    const chatContainer = document.getElementById('chatContainer');
+    const messages = chatContainer.querySelectorAll('.message:not(.assistant):first-child');
+    messages.forEach(message => message.remove());
+    
+    // Keep only the welcome message
+    const welcomeMessage = chatContainer.querySelector('.message.assistant');
+    chatContainer.innerHTML = '';
+    chatContainer.appendChild(welcomeMessage);
+    
+    // Add typing indicator back
+    const typingIndicator = document.getElementById('typingIndicator');
+    chatContainer.appendChild(typingIndicator);
+    
+    // Reset statistics
+    chatHistory = [];
+    questionCount = 0;
+    responseTimes = [];
+    updateStatistics();
+    saveChatHistory();
+}
+
+function updateStatistics() {
+    document.getElementById('totalQuestions').textContent = questionCount;
+    
+    if (responseTimes.length > 0) {
+        const avgTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+        document.getElementById('avgResponseTime').textContent = (avgTime / 1000).toFixed(1) + 's';
+    } else {
+        document.getElementById('avgResponseTime').textContent = '-';
+    }
+}
+
+function saveChatHistory() {
+    localStorage.setItem('ekyc_chat_history', JSON.stringify(chatHistory));
+}
+
+function loadChatHistory() {
+    const saved = localStorage.getItem('ekyc_chat_history');
+    if (saved) {
+        chatHistory = JSON.parse(saved);
+        questionCount = chatHistory.length;
+        updateStatistics();
+    }
+}
+
+async function checkKnowledgeBaseStatus() {
+    try {
+        const response = await fetch('/api/knowledge-base/status');
+        if (response.ok) {
+            const status = await response.json();
+            document.getElementById('knowledgeStatus').textContent = status.message || 'Ready';
+            document.getElementById('lastUpdated').textContent = 
+                status.last_updated ? new Date(status.last_updated).toLocaleString() : 'Never';
+        }
+    } catch (error) {
+        console.error('Error checking knowledge base status:', error);
+        document.getElementById('knowledgeStatus').textContent = 'Unknown';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,1131 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Dokumen - eKYC System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-area {
+        border: 3px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: #f8fafc;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .upload-area:hover {
+        border-color: var(--primary-color);
+        background: #f1f5f9;
+        transform: translateY(-2px);
+    }
+    
+    .upload-area.dragover {
+        border-color: var(--success-color);
+        background: rgba(5, 150, 105, 0.1);
+        transform: scale(1.02);
+    }
+    
+    .document-type-card {
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .document-type-card:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 15px rgba(37, 99, 235, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .document-type-card.selected {
+        border-color: var(--primary-color);
+        background: rgba(37, 99, 235, 0.05);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    }
+    
+    .preview-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .file-info {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .analysis-result {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .extracted-field {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .confidence-bar {
+        height: 6px;
+        border-radius: 3px;
+        background: #e2e8f0;
+        overflow: hidden;
+    }
+    
+    .confidence-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+    
+    .quality-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    
+    .quality-high { background: var(--success-color); }
+    .quality-medium { background: var(--warning-color); }
+    .quality-low { background: var(--danger-color); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="alertContainer"></div>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="h3 mb-1">
+                    <i class="fas fa-upload text-primary me-2"></i>
+                    Upload Dokumen
+                </h1>
+                <p class="text-muted mb-0">Upload dokumen identitas untuk analisis otomatis dengan AI</p>
+            </div>
+            <div>
+                <a href="/documents" class="btn btn-outline-primary">
+                    <i class="fas fa-folder me-2"></i>
+                    Lihat Dokumen
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Section -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cloud-upload-alt me-2"></i>
+                    Upload File
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Document Type Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Pilih Jenis Dokumen:</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="document-type-card" data-type="ktp">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-id-card fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">KTP (Kartu Tanda Penduduk)</h6>
+                                        <small class="text-muted">Kartu identitas resmi Indonesia</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="document-type-card" data-type="passport">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-passport fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Paspor</h6>
+                                        <small class="text-muted">Dokumen perjalanan internasional</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="document-type-card" data-type="sim">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-car fa-2x text-warning me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">SIM (Surat Izin Mengemudi)</h6>
+                                        <small class="text-muted">Izin mengemudi kendaraan</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="document-type-card" data-type="other">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-alt fa-2x text-info me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Dokumen Lainnya</h6>
+                                        <small class="text-muted">Dokumen identitas lainnya</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                    <h5 class="text-muted mb-2">Drag & Drop file di sini</h5>
+                    <p class="text-muted mb-3">atau klik untuk memilih file</p>
+                    <input type="file" id="fileInput" accept="image/*,application/pdf" style="display: none;">
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open me-2"></i>
+                        Pilih File
+                    </button>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Support: JPG, PNG, PDF (Max: 10MB)
+                        </small>
+                    </div>
+                </div>
+
+                <!-- File Preview -->
+                <div id="filePreview" class="mt-4" style="display: none;">
+                    <div class="file-info">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1" id="fileName">-</h6>
+                                <small class="text-muted" id="fileSize">-</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearFile()">
+                                <i class="fas fa-times"></i>
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <img id="previewImage" class="preview-image" style="display: none;">
+                        <div id="pdfPreview" style="display: none;">
+                            <i class="fas fa-file-pdf fa-4x text-danger"></i>
+                            <p class="mt-2">File PDF siap dianalisis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div id="uploadProgress" class="mt-4" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Upload Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress">
+                        <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Upload Button -->
+                <div class="mt-4">
+                    <button type="button" id="uploadBtn" class="btn btn-primary btn-lg" onclick="uploadFile()" disabled>
+                        <i class="fas fa-upload me-2"></i>
+                        Upload & Analisis
+                    </button>
+                    <button type="button" id="analyzeBtn" class="btn btn-success btn-lg ms-2" onclick="analyzeDocument()" style="display: none;">
+                        <i class="fas fa-brain me-2"></i>
+                        Analisis dengan AI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Informasi
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6><i class="fas fa-check-circle text-success me-2"></i>Jenis File yang Didukung:</h6>
+                    <ul class="list-unstyled ms-3">
+                        <li><i class="fas fa-image text-primary me-2"></i>JPEG, JPG</li>
+                        <li><i class="fas fa-image text-primary me-2"></i>PNG</li>
+                        <li><i class="fas fa-file-pdf text-danger me-2"></i>PDF</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-3">
+                    <h6><i class="fas fa-magic text-warning me-2"></i>Fitur Analisis:</h6>
+                    <ul class="list-unstyled ms-3">
+                        <li><i class="fas fa-eye text-info me-2"></i>OCR (Optical Character Recognition)</li>
+                        <li><i class="fas fa-brain text-success me-2"></i>AI Document Analysis</li>
+                        <li><i class="fas fa-shield-alt text-primary me-2"></i>Authenticity Verification</li>
+                        <li><i class="fas fa-search text-warning me-2"></i>Anomaly Detection</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Tips:</strong> Pastikan dokumen terlihat jelas dan tidak terpotong untuk hasil analisis yang optimal.
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Uploads -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Upload Terbaru
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="recentUploads">
+                    <p class="text-muted text-center">Belum ada upload</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analysis Results -->
+<div id="analysisResults" class="row mt-5" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Hasil Analisis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h6 class="mb-3">Data Terekstrak:</h6>
+                        <div id="extractedData"></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h6 class="mb-3">Analisis AI:</h6>
+                        <div id="aiAnalysis"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shield-alt me-2"></i>
+                eKYC System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-upload me-2"></i>
+                            Upload Dokumen Identitas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Document Type Selection -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Pilih Jenis Dokumen:</label>
+                            <div class="row" id="documentTypes">
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="ktp">
+                                        <i class="fas fa-id-card fa-2x text-primary mb-2"></i>
+                                        <h6>KTP</h6>
+                                        <small class="text-muted">Kartu Tanda Penduduk</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="sim">
+                                        <i class="fas fa-car fa-2x text-primary mb-2"></i>
+                                        <h6>SIM</h6>
+                                        <small class="text-muted">Surat Izin Mengemudi</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="passport">
+                                        <i class="fas fa-passport fa-2x text-primary mb-2"></i>
+                                        <h6>Paspor</h6>
+                                        <small class="text-muted">Paspor Indonesia</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="npwp">
+                                        <i class="fas fa-file-invoice fa-2x text-primary mb-2"></i>
+                                        <h6>NPWP</h6>
+                                        <small class="text-muted">Nomor Pokok Wajib Pajak</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="kartu_keluarga">
+                                        <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                                        <h6>Kartu Keluarga</h6>
+                                        <small class="text-muted">KK</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="document-type-card" data-type="other">
+                                        <i class="fas fa-file fa-2x text-primary mb-2"></i>
+                                        <h6>Lainnya</h6>
+                                        <small class="text-muted">Dokumen lain</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selectedDocumentType" value="">
+                        </div>
+
+                        <!-- Upload Area -->
+                        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <h5>Drag & Drop atau Klik untuk Upload</h5>
+                            <p class="text-muted">Format yang didukung: JPG, PNG, PDF (Maksimal 10MB)</p>
+                            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display: none;">
+                        </div>
+
+                        <!-- File Preview -->
+                        <div id="filePreview" class="mt-4" style="display: none;">
+                            <h6>File yang dipilih:</h6>
+                            <div id="previewContainer"></div>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div id="uploadProgress" class="mt-4" style="display: none;">
+                            <h6>Progress Upload:</h6>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Button -->
+                        <div class="mt-4">
+                            <button id="uploadButton" class="btn btn-primary btn-lg" disabled>
+                                <i class="fas fa-upload me-2"></i>
+                                Upload & Analisis
+                            </button>
+                            <button id="analyzeButton" class="btn btn-success btn-lg ms-2" style="display: none;">
+                                <i class="fas fa-brain me-2"></i>
+                                Analisis dengan AI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Tips Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            Tips Upload
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Pastikan foto jelas dan tidak blur
+                            </li>
+{% block extra_js %}
+<script>
+let selectedFile = null;
+let selectedDocumentType = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeUpload();
+    loadRecentUploads();
+});
+
+function initializeUpload() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const documentTypeCards = document.querySelectorAll('.document-type-card');
+    
+    // Document type selection
+    documentTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            documentTypeCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedDocumentType = this.dataset.type;
+            updateUploadButton();
+        });
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', function(e) {
+        handleFileSelect(e.target.files[0]);
+    });
+    
+    // Drag and drop events
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
+        }
+    });
+}
+
+function handleFileSelect(file) {
+    if (!file) return;
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+        showAlert('Jenis file tidak didukung. Gunakan JPG, PNG, atau PDF.', 'danger');
+        return;
+    }
+    
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        showAlert('Ukuran file terlalu besar. Maksimal 10MB.', 'danger');
+        return;
+    }
+    
+    selectedFile = file;
+    showFilePreview(file);
+    updateUploadButton();
+}
+
+function showFilePreview(file) {
+    const previewContainer = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const previewImage = document.getElementById('previewImage');
+    const pdfPreview = document.getElementById('pdfPreview');
+    
+    fileName.textContent = file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+            pdfPreview.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    } else if (file.type === 'application/pdf') {
+        previewImage.style.display = 'none';
+        pdfPreview.style.display = 'block';
+    }
+    
+    previewContainer.style.display = 'block';
+}
+
+function clearFile() {
+    selectedFile = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('filePreview').style.display = 'none';
+    updateUploadButton();
+}
+
+function updateUploadButton() {
+    const uploadBtn = document.getElementById('uploadBtn');
+    uploadBtn.disabled = !selectedFile || !selectedDocumentType;
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+async function uploadFile() {
+    if (!selectedFile || !selectedDocumentType) {
+        showAlert('Pilih jenis dokumen dan file terlebih dahulu.', 'warning');
+        return;
+    }
+    
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressContainer = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    uploadBtn.setAttribute('data-original-text', uploadBtn.innerHTML);
+    showLoading(uploadBtn, true);
+    progressContainer.style.display = 'block';
+    
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('document_type', selectedDocumentType);
+    
+    try {
+        const xhr = new XMLHttpRequest();
+        
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                progressBar.style.width = percentComplete + '%';
+                progressText.textContent = Math.round(percentComplete) + '%';
+            }
+        });
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                showAlert('File berhasil diupload!', 'success');
+                
+                // Show analyze button
+                document.getElementById('analyzeBtn').style.display = 'inline-block';
+                document.getElementById('analyzeBtn').dataset.filename = response.filename;
+                
+                // Add to recent uploads
+                addToRecentUploads(response);
+                
+            } else {
+                const error = JSON.parse(xhr.responseText);
+                showAlert('Upload gagal: ' + (error.detail || 'Unknown error'), 'danger');
+            }
+            
+            showLoading(uploadBtn, false);
+            progressContainer.style.display = 'none';
+        };
+        
+        xhr.onerror = function() {
+            showAlert('Terjadi kesalahan saat upload.', 'danger');
+            showLoading(uploadBtn, false);
+            progressContainer.style.display = 'none';
+        };
+        
+        xhr.open('POST', '/api/upload-document/');
+        xhr.send(formData);
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        showAlert('Terjadi kesalahan saat upload.', 'danger');
+        showLoading(uploadBtn, false);
+        progressContainer.style.display = 'none';
+    }
+}
+
+async function analyzeDocument() {
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const filename = analyzeBtn.dataset.filename;
+    
+    if (!filename) {
+        showAlert('Tidak ada file untuk dianalisis.', 'warning');
+        return;
+    }
+    
+    analyzeBtn.setAttribute('data-original-text', analyzeBtn.innerHTML);
+    showLoading(analyzeBtn, true);
+    
+    try {
+        const response = await fetch(`/api/analyze-document/${filename}`, {
+            method: 'POST'
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            showAnalysisResults(result);
+            showAlert('Analisis selesai!', 'success');
+        } else {
+            const error = await response.json();
+            showAlert('Analisis gagal: ' + (error.detail || 'Unknown error'), 'danger');
+        }
+    } catch (error) {
+        console.error('Analysis error:', error);
+        showAlert('Terjadi kesalahan saat analisis.', 'danger');
+    }
+    
+    showLoading(analyzeBtn, false);
+}
+
+function showAnalysisResults(result) {
+    const resultsContainer = document.getElementById('analysisResults');
+    const extractedData = document.getElementById('extractedData');
+    const aiAnalysis = document.getElementById('aiAnalysis');
+    
+    // Show extracted data
+    if (result.extracted_data) {
+        let dataHtml = '';
+        for (const [key, value] of Object.entries(result.extracted_data)) {
+            if (key !== 'confidence_scores') {
+                dataHtml += `
+                    <div class="extracted-field">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>${key.replace('_', ' ').toUpperCase()}:</strong>
+                            <small class="text-muted">${getConfidenceDisplay(result.extracted_data.confidence_scores?.[key] || 0)}</small>
+                        </div>
+                        <div class="mt-1">${value || '-'}</div>
+                        <div class="confidence-bar mt-2">
+                            <div class="confidence-fill ${getConfidenceClass(result.extracted_data.confidence_scores?.[key] || 0)}" 
+                                 style="width: ${(result.extracted_data.confidence_scores?.[key] || 0) * 100}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        extractedData.innerHTML = dataHtml;
+    }
+    
+    // Show AI analysis
+    if (result.ai_analysis) {
+        let analysisHtml = `
+            <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="quality-indicator quality-${getQualityLevel(result.ai_analysis.quality_score)}"></span>
+                    <strong>Quality Score: ${result.ai_analysis.quality_score}%</strong>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill ${getQualityClass(result.ai_analysis.quality_score)}" 
+                         style="width: ${result.ai_analysis.quality_score}%"></div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <strong>Authenticity:</strong>
+                <span class="badge ${result.ai_analysis.is_authentic ? 'bg-success' : 'bg-danger'} ms-2">
+                    ${result.ai_analysis.is_authentic ? 'Valid' : 'Suspicious'}
+                </span>
+            </div>
+            
+            <div class="mb-3">
+                <strong>Anomalies:</strong>
+                ${result.ai_analysis.anomalies && result.ai_analysis.anomalies.length > 0 ? 
+                    `<ul class="mt-2">
+                        ${result.ai_analysis.anomalies.map(anomaly => `<li class="text-warning">${anomaly}</li>`).join('')}
+                    </ul>` : 
+                    '<span class="text-success ms-2">None detected</span>'
+                }
+            </div>
+            
+            <div>
+                <strong>Summary:</strong>
+                <p class="mt-2">${result.ai_analysis.summary || 'No summary available'}</p>
+            </div>
+        `;
+        aiAnalysis.innerHTML = analysisHtml;
+    }
+    
+    resultsContainer.style.display = 'block';
+    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+function getConfidenceDisplay(confidence) {
+    return `${Math.round(confidence * 100)}%`;
+}
+
+function getConfidenceClass(confidence) {
+    if (confidence >= 0.8) return 'bg-success';
+    if (confidence >= 0.6) return 'bg-warning';
+    return 'bg-danger';
+}
+
+function getQualityLevel(score) {
+    if (score >= 80) return 'high';
+    if (score >= 60) return 'medium';
+    return 'low';
+}
+
+function getQualityClass(score) {
+    if (score >= 80) return 'bg-success';
+    if (score >= 60) return 'bg-warning';
+    return 'bg-danger';
+}
+
+async function loadRecentUploads() {
+    try {
+        const response = await fetch('/api/recent-uploads');
+        if (response.ok) {
+            const uploads = await response.json();
+            displayRecentUploads(uploads);
+        }
+    } catch (error) {
+        console.error('Error loading recent uploads:', error);
+    }
+}
+
+function displayRecentUploads(uploads) {
+    const container = document.getElementById('recentUploads');
+    
+    if (!uploads || uploads.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">Belum ada upload</p>';
+        return;
+    }
+    
+    let html = '';
+    uploads.forEach(upload => {
+        html += `
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                <div>
+                    <small class="fw-bold">${upload.filename}</small><br>
+                    <small class="text-muted">${upload.document_type}</small>
+                </div>
+                <small class="text-muted">${new Date(upload.uploaded_at).toLocaleDateString()}</small>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function addToRecentUploads(upload) {
+    // Add to the recent uploads list
+    loadRecentUploads();
+}
+</script>
+{% endblock %}
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Pencahayaan yang cukup
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Format JPG, PNG, atau PDF
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Ukuran file maksimal 10MB
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Security Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            Keamanan Data
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="small text-muted">
+                            Data Anda dienkripsi dan diproses dengan standar keamanan tinggi. 
+                            Informasi personal tidak akan dibagikan kepada pihak ketiga.
+                        </p>
+                        <div class="text-center">
+                            <i class="fas fa-lock fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="row mt-4" style="display: none;">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Hasil Analisis AI
+                        </h5>
+                    </div>
+                    <div class="card-body" id="analysisResults">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedFiles = [];
+        let selectedDocumentType = '';
+
+        // Document type selection
+        document.querySelectorAll('.document-type-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.document-type-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedDocumentType = this.dataset.type;
+                document.getElementById('selectedDocumentType').value = selectedDocumentType;
+                updateUploadButton();
+            });
+        });
+
+        // File input handling
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const uploadButton = document.getElementById('uploadButton');
+        const analyzeButton = document.getElementById('analyzeButton');
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files);
+            displayFilePreview();
+            updateUploadButton();
+        }
+
+        function displayFilePreview() {
+            const previewSection = document.getElementById('filePreview');
+            const previewContainer = document.getElementById('previewContainer');
+            
+            if (selectedFiles.length > 0) {
+                previewSection.style.display = 'block';
+                previewContainer.innerHTML = '';
+                
+                selectedFiles.forEach((file, index) => {
+                    const fileDiv = document.createElement('div');
+                    fileDiv.className = 'border rounded p-3 mb-2';
+                    
+                    let preview = '';
+                    if (file.type.startsWith('image/')) {
+                        const url = URL.createObjectURL(file);
+                        preview = `<img src="${url}" class="preview-image me-3" alt="Preview">`;
+                    } else {
+                        preview = `<i class="fas fa-file-pdf fa-3x text-danger me-3"></i>`;
+                    }
+                    
+                    fileDiv.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            ${preview}
+                            <div>
+                                <h6 class="mb-1">${file.name}</h6>
+                                <small class="text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                                <br>
+                                <small class="text-muted">${file.type}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger ms-auto" onclick="removeFile(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    previewContainer.appendChild(fileDiv);
+                });
+            } else {
+                previewSection.style.display = 'none';
+            }
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displayFilePreview();
+            updateUploadButton();
+        }
+
+        function updateUploadButton() {
+            const hasFiles = selectedFiles.length > 0;
+            const hasDocumentType = selectedDocumentType !== '';
+            uploadButton.disabled = !(hasFiles && hasDocumentType);
+        }
+
+        // Upload functionality
+        uploadButton.addEventListener('click', async function() {
+            if (selectedFiles.length === 0 || !selectedDocumentType) {
+                alert('Pilih jenis dokumen dan file terlebih dahulu');
+                return;
+            }
+
+            const progressSection = document.getElementById('uploadProgress');
+            const progressBar = progressSection.querySelector('.progress-bar');
+            
+            progressSection.style.display = 'block';
+            this.disabled = true;
+
+            try {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    const file = selectedFiles[i];
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('document_type', selectedDocumentType);
+
+                    const response = await fetch('/upload-document/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('Upload successful:', result);
+                        
+                        // Update progress
+                        const progress = ((i + 1) / selectedFiles.length) * 100;
+                        progressBar.style.width = progress + '%';
+                        
+                        // If last file, show analyze button
+                        if (i === selectedFiles.length - 1) {
+                            analyzeButton.style.display = 'inline-block';
+                            analyzeButton.dataset.filename = result.filename;
+                        }
+                    } else {
+                        throw new Error('Upload failed');
+                    }
+                }
+                
+                alert('Upload berhasil! Klik "Analisis dengan AI" untuk melanjutkan.');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Upload gagal. Silakan coba lagi.');
+                this.disabled = false;
+                progressSection.style.display = 'none';
+            }
+        });
+
+        // Analysis functionality
+        analyzeButton.addEventListener('click', async function() {
+            this.disabled = true;
+            
+            try {
+                const filename = this.dataset.filename;
+                const response = await fetch(`/analyze-document/${filename}?document_type=${selectedDocumentType}`);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    displayAnalysisResults(result);
+                } else {
+                    throw new Error('Analysis failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Analisis gagal. Silakan coba lagi.');
+            } finally {
+                this.disabled = false;
+            }
+        });
+
+        function displayAnalysisResults(result) {
+            const resultsSection = document.getElementById('resultsSection');
+            const analysisResults = document.getElementById('analysisResults');
+            
+            let confidenceColor = 'success';
+            if (result.confidence_score < 0.6) confidenceColor = 'danger';
+            else if (result.confidence_score < 0.8) confidenceColor = 'warning';
+            
+            analysisResults.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Informasi Dokumen</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Jenis:</strong> ${result.document_type}</li>
+                            <li><strong>Status:</strong> 
+                                <span class="badge bg-${result.verification_status === 'VERIFIED' ? 'success' : 'warning'}">
+                                    ${result.verification_status}
+                                </span>
+                            </li>
+                            <li><strong>Confidence Score:</strong> 
+                                <span class="badge bg-${confidenceColor}">
+                                    ${(result.confidence_score * 100).toFixed(1)}%
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Detail Analisis</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Waktu Proses:</strong> ${result.processing_time?.toFixed(2)}s</li>
+                            <li><strong>Kualitas:</strong> ${result.quality_score ? (result.quality_score * 100).toFixed(1) + '%' : 'N/A'}</li>
+                            <li><strong>OCR Confidence:</strong> ${result.ocr_confidence ? (result.ocr_confidence * 100).toFixed(1) + '%' : 'N/A'}</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                ${result.detected_fields ? `
+                <div class="mt-3">
+                    <h6>Data Terdeteksi</h6>
+                    <div class="bg-light p-3 rounded">
+                        <pre>${JSON.stringify(result.detected_fields, null, 2)}</pre>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${result.anomalies && result.anomalies.length > 0 ? `
+                <div class="mt-3">
+                    <h6>Anomali Terdeteksi</h6>
+                    <ul class="list-unstyled">
+                        ${result.anomalies.map(anomaly => `<li><i class="fas fa-exclamation-triangle text-warning me-2"></i>${anomaly}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+            `;
+            
+            resultsSection.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

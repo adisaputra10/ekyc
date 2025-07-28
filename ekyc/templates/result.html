@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKYC Result - Hasil Verifikasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header.error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #28a745;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #34495e;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .verification-code {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .verification-code h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .verification-code .code {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #0d47a1;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .analysis-result {
+            margin-top: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-verified {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-review {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .issues-list {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .issues-list h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .issues-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .issues-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ffeaa7;
+        }
+        
+        .issues-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .download-section {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .confidence-score {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .score-high { color: #27ae60; }
+        .score-medium { color: #f39c12; }
+        .score-low { color: #e74c3c; }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if success %}
+        <div class="header">
+            <h1>✅ eKYC Berhasil</h1>
+            <p>Formulir eKYC Anda telah berhasil diproses</p>
+        </div>
+        
+        <div class="content">
+            <div class="success-message">
+                <h3>🎉 Selamat!</h3>
+                <p>Formulir eKYC Anda telah berhasil disubmit dan dokumen PDF telah dibuat.</p>
+            </div>
+            
+            {% if verification_code %}
+            <div class="verification-code">
+                <h3>📋 Kode Verifikasi</h3>
+                <div class="code">{{ verification_code }}</div>
+                <p style="margin-top: 10px; color: #666;">Simpan kode ini untuk referensi di masa depan</p>
+            </div>
+            {% endif %}
+            
+            <!-- Informasi Personal -->
+            {% if form_data %}
+            <div class="info-section">
+                <div class="section-header">
+                    👤 Informasi Personal
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Nama Lengkap</div>
+                            <div class="info-value">{{ form_data.personal_info.full_name }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">NIK</div>
+                            <div class="info-value">{{ form_data.personal_info.id_number }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tempat, Tanggal Lahir</div>
+                            <div class="info-value">{{ form_data.personal_info.birth_place }}, {{ form_data.personal_info.birth_date }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Jenis Kelamin</div>
+                            <div class="info-value">{{ form_data.personal_info.gender.value|title }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alamat -->
+            <div class="info-section">
+                <div class="section-header">
+                    🏠 Alamat
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Alamat Lengkap</div>
+                            <div class="info-value">
+                                {{ form_data.address.street }}<br>
+                                RT {{ form_data.address.rt_rw }}, {{ form_data.address.village }}<br>
+                                {{ form_data.address.district }}, {{ form_data.address.city }}<br>
+                                {{ form_data.address.province }} {{ form_data.address.postal_code }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Hasil Analisa Dokumen -->
+            {% if analysis_result %}
+            <div class="info-section">
+                <div class="section-header">
+                    🔍 Hasil Analisa Dokumen
+                </div>
+                <div class="section-content">
+                    <div class="analysis-result">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Jenis Dokumen</div>
+                                <div class="info-value">{{ analysis_result.document_type|upper }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status Verifikasi</div>
+                                <div class="info-value">
+                                    {% if analysis_result.verification_status == 'verified' %}
+                                        <span class="status-badge status-verified">Terverifikasi</span>
+                                    {% elif analysis_result.verification_status == 'requires_review' %}
+                                        <span class="status-badge status-review">Perlu Review</span>
+                                    {% else %}
+                                        <span class="status-badge status-rejected">Ditolak</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Confidence Score</div>
+                                <div class="info-value">
+                                    <span class="confidence-score 
+                                    {% if analysis_result.confidence_score >= 0.8 %}score-high
+                                    {% elif analysis_result.confidence_score >= 0.6 %}score-medium
+                                    {% else %}score-low{% endif %}">
+                                        {{ "%.1f"|format(analysis_result.confidence_score * 100) }}%
+                                    </span>
+                                </div>
+                            </div>
+                            {% if analysis_result.face_match_score %}
+                            <div class="info-item">
+                                <div class="info-label">Face Match Score</div>
+                                <div class="info-value">
+                                    <span class="confidence-score 
+                                    {% if analysis_result.face_match_score >= 0.8 %}score-high
+                                    {% elif analysis_result.face_match_score >= 0.6 %}score-medium
+                                    {% else %}score-low{% endif %}">
+                                        {{ "%.1f"|format(analysis_result.face_match_score * 100) }}%
+                                    </span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if analysis_result.issues_found %}
+                        <div class="issues-list">
+                            <h4>⚠️ Issues Ditemukan:</h4>
+                            <ul>
+                                {% for issue in analysis_result.issues_found %}
+                                <li>• {{ issue }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        {% if analysis_result.recommendations %}
+                        <div class="issues-list" style="background: #d1ecf1; border-color: #bee5eb;">
+                            <h4 style="color: #0c5460;">💡 Rekomendasi:</h4>
+                            <ul>
+                                {% for rec in analysis_result.recommendations %}
+                                <li>• {{ rec }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if pdf_path %}
+            <div class="download-section">
+                <h3>📄 Unduh Dokumen eKYC</h3>
+                <p style="margin: 10px 0; color: #666;">Dokumen PDF Anda siap untuk diunduh</p>
+                <a href="{{ pdf_path }}" class="download-btn" target="_blank">
+                    📥 Download PDF
+                </a>
+            </div>
+            {% endif %}
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/" class="back-btn">← Kembali ke Form</a>
+            </div>
+        </div>
+        
+        {% else %}
+        <div class="header error">
+            <h1>❌ Error</h1>
+            <p>Terjadi kesalahan dalam memproses formulir eKYC</p>
+        </div>
+        
+        <div class="content">
+            <div class="error-message">
+                <h3>🚫 Kesalahan!</h3>
+                <p><strong>Error:</strong> {{ error }}</p>
+                <p>Silakan coba lagi atau hubungi administrator jika masalah berlanjut.</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/" class="back-btn">← Kembali ke Form</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

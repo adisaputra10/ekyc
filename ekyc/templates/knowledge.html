@@ -1,0 +1,729 @@
+{% extends "base.html" %}
+
+{% block title %}Knowledge Base Management - eKYC System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .knowledge-card {
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .knowledge-card:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 15px rgba(37, 99, 235, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .upload-zone {
+        border: 3px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: #f8fafc;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .upload-zone:hover {
+        border-color: var(--primary-color);
+        background: #f1f5f9;
+    }
+    
+    .upload-zone.dragover {
+        border-color: var(--success-color);
+        background: rgba(5, 150, 105, 0.1);
+        transform: scale(1.02);
+    }
+    
+    .knowledge-item {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .embedding-progress {
+        background: #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+        height: 8px;
+        margin: 0.5rem 0;
+    }
+    
+    .embedding-progress-fill {
+        background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+    
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 600;
+    }
+    
+    .status-processing {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .status-error {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .knowledge-stats {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .pdf-preview {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        background: #f9fafb;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="hero-section">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="h3 mb-1">
+                    <i class="fas fa-database text-primary me-2"></i>
+                    Knowledge Base Management
+                </h1>
+                <p class="text-muted mb-0">Kelola knowledge base untuk sistem RAG dan vector database</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="refreshKnowledgeBase()">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    Refresh
+                </button>
+                <a href="/rag" class="btn btn-primary">
+                    <i class="fas fa-comments me-2"></i>
+                    Test RAG
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Knowledge Base Stats -->
+<div class="container mt-4">
+    <div class="knowledge-stats">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <h3 class="mb-1" id="totalDocuments">-</h3>
+                    <small>Total Documents</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <h3 class="mb-1" id="totalEmbeddings">-</h3>
+                    <small>Vector Embeddings</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <h3 class="mb-1" id="vectorDbStatus">-</h3>
+                    <small>Vector DB Status</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <h3 class="mb-1" id="lastUpdate">-</h3>
+                    <small>Last Updated</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <!-- Upload PDF Section -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-pdf me-2"></i>
+                        Upload PDF ke Knowledge Base
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Upload Zone -->
+                    <div class="upload-zone" id="pdfUploadZone" onclick="document.getElementById('pdfFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted mb-2">Upload PDF Document</h5>
+                        <p class="text-muted mb-0">Drag & drop PDF file atau klik untuk memilih</p>
+                        <small class="text-muted mt-2">Supported: PDF files only</small>
+                    </div>
+                    
+                    <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;">
+                    
+                    <!-- File Info -->
+                    <div id="fileInfo" style="display: none;" class="mt-3">
+                        <div class="knowledge-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong id="fileName"></strong>
+                                    <div class="text-muted small" id="fileSize"></div>
+                                </div>
+                                <span class="status-badge status-processing" id="fileStatus">Ready</span>
+                            </div>
+                            <div class="embedding-progress">
+                                <div class="embedding-progress-fill" id="embeddingProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PDF Preview -->
+                    <div id="pdfPreview" style="display: none;" class="mt-3">
+                        <h6>Preview Content:</h6>
+                        <div class="pdf-preview" id="pdfContent"></div>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div class="mt-3">
+                        <button class="btn btn-primary" id="embedButton" onclick="startEmbedding()" disabled>
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Add to Knowledge Base
+                        </button>
+                        <button class="btn btn-outline-secondary ms-2" onclick="clearSelection()">
+                            <i class="fas fa-times me-2"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manual Text Input Section -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>
+                        Add Manual Knowledge
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="manualKnowledgeForm">
+                        <div class="mb-3">
+                            <label for="knowledgeTitle" class="form-label">Title/Topic</label>
+                            <input type="text" class="form-control" id="knowledgeTitle" placeholder="e.g., KTP Validation Rules">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="knowledgeCategory" class="form-label">Category</label>
+                            <select class="form-select" id="knowledgeCategory">
+                                <option value="">Select Category</option>
+                                <option value="ktp">KTP Guidelines</option>
+                                <option value="sim">SIM Guidelines</option>
+                                <option value="passport">Passport Guidelines</option>
+                                <option value="akta_perusahaan">Akta Perusahaan Guidelines</option>
+                                <option value="general">General Knowledge</option>
+                                <option value="regulation">Regulation & Law</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="knowledgeContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="knowledgeContent" rows="8" placeholder="Enter detailed knowledge content here..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="knowledgeTags" class="form-label">Tags (comma separated)</label>
+                            <input type="text" class="form-control" id="knowledgeTags" placeholder="e.g., validation, requirements, format">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Add to Knowledge Base
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Current Knowledge Base -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        Current Knowledge Base
+                    </h5>
+                    <div>
+                        <button class="btn btn-outline-danger btn-sm" onclick="clearKnowledgeBase()">
+                            <i class="fas fa-trash me-2"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="knowledgeList">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-database fa-3x mb-3"></i>
+                            <p>Loading knowledge base...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Query Modal -->
+<div class="modal fade" id="testQueryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Test Knowledge Query</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="testQuery" class="form-label">Test Query</label>
+                    <input type="text" class="form-control" id="testQuery" placeholder="e.g., What are KTP validation requirements?">
+                </div>
+                <button class="btn btn-primary" onclick="executeTestQuery()">
+                    <i class="fas fa-search me-2"></i>
+                    Search Knowledge Base
+                </button>
+                <div id="queryResults" class="mt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedFile = null;
+let embeddingInProgress = false;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadKnowledgeBaseStats();
+    loadCurrentKnowledge();
+    setupDragAndDrop();
+});
+
+// Setup drag and drop
+function setupDragAndDrop() {
+    const uploadZone = document.getElementById('pdfUploadZone');
+    
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    
+    uploadZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+    
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].type === 'application/pdf') {
+            handleFileSelection(files[0]);
+        } else {
+            showAlert('Please select a valid PDF file', 'warning');
+        }
+    });
+}
+
+// File input change handler
+document.getElementById('pdfFileInput').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        handleFileSelection(e.target.files[0]);
+    }
+});
+
+// Handle file selection
+function handleFileSelection(file) {
+    selectedFile = file;
+    
+    // Show file info
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    document.getElementById('fileStatus').textContent = 'Selected';
+    document.getElementById('fileInfo').style.display = 'block';
+    document.getElementById('embedButton').disabled = false;
+    
+    // Preview PDF content (simplified)
+    previewPDF(file);
+}
+
+// Preview PDF content
+async function previewPDF(file) {
+    try {
+        // For demo purposes, show file info
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('pdfContent').innerHTML = 
+                `File: ${file.name}<br>Size: ${formatFileSize(file.size)}<br>Type: ${file.type}<br><br>PDF content preview would appear here...`;
+            document.getElementById('pdfPreview').style.display = 'block';
+        };
+        reader.readAsText(file);
+    } catch (error) {
+        console.error('PDF preview error:', error);
+    }
+}
+
+// Start embedding process
+async function startEmbedding() {
+    if (!selectedFile || embeddingInProgress) return;
+    
+    embeddingInProgress = true;
+    const embedButton = document.getElementById('embedButton');
+    const statusEl = document.getElementById('fileStatus');
+    const progressEl = document.getElementById('embeddingProgress');
+    
+    // Update UI
+    embedButton.disabled = true;
+    embedButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    statusEl.textContent = 'Processing';
+    statusEl.className = 'status-badge status-processing';
+    
+    try {
+        // Upload and embed PDF
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('document_type', 'knowledge_base');
+        
+        // Simulate progress
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 20;
+            if (progress > 90) progress = 90;
+            progressEl.style.width = progress + '%';
+        }, 200);
+        
+        const response = await fetch('/api/knowledge/embed-pdf', {
+            method: 'POST',
+            body: formData
+        });
+        
+        clearInterval(progressInterval);
+        progressEl.style.width = '100%';
+        
+        if (response.ok) {
+            const result = await response.json();
+            
+            // Success
+            statusEl.textContent = 'Completed';
+            statusEl.className = 'status-badge status-completed';
+            
+            showAlert(`PDF embedded successfully! Added ${result.chunks_created || 'multiple'} chunks to knowledge base.`, 'success');
+            
+            // Refresh knowledge base
+            setTimeout(() => {
+                loadKnowledgeBaseStats();
+                loadCurrentKnowledge();
+                clearSelection();
+            }, 1000);
+            
+        } else {
+            throw new Error('Failed to embed PDF');
+        }
+        
+    } catch (error) {
+        console.error('Embedding error:', error);
+        statusEl.textContent = 'Error';
+        statusEl.className = 'status-badge status-error';
+        showAlert('Failed to embed PDF: ' + error.message, 'danger');
+        progressEl.style.width = '0%';
+    }
+    
+    // Reset UI
+    embedButton.disabled = false;
+    embedButton.innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add to Knowledge Base';
+    embeddingInProgress = false;
+}
+
+// Manual knowledge form handler
+document.getElementById('manualKnowledgeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('knowledgeTitle').value;
+    const category = document.getElementById('knowledgeCategory').value;
+    const content = document.getElementById('knowledgeContent').value;
+    const tags = document.getElementById('knowledgeTags').value;
+    
+    if (!title || !content) {
+        showAlert('Please fill in title and content', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/knowledge/add-manual', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                category: category,
+                content: content,
+                tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+            })
+        });
+        
+        if (response.ok) {
+            showAlert('Knowledge added successfully!', 'success');
+            
+            // Clear form
+            document.getElementById('manualKnowledgeForm').reset();
+            
+            // Refresh knowledge base
+            loadKnowledgeBaseStats();
+            loadCurrentKnowledge();
+        } else {
+            throw new Error('Failed to add knowledge');
+        }
+        
+    } catch (error) {
+        console.error('Add knowledge error:', error);
+        showAlert('Failed to add knowledge: ' + error.message, 'danger');
+    }
+});
+
+// Load knowledge base stats
+async function loadKnowledgeBaseStats() {
+    try {
+        const response = await fetch('/api/knowledge/stats');
+        if (response.ok) {
+            const stats = await response.json();
+            
+            document.getElementById('totalDocuments').textContent = stats.total_documents || 0;
+            document.getElementById('totalEmbeddings').textContent = stats.total_embeddings || 0;
+            document.getElementById('vectorDbStatus').textContent = stats.vector_db_status || 'Unknown';
+            document.getElementById('lastUpdate').textContent = stats.last_update || 'Never';
+        }
+    } catch (error) {
+        console.error('Failed to load stats:', error);
+    }
+}
+
+// Load current knowledge
+async function loadCurrentKnowledge() {
+    try {
+        const response = await fetch('/api/knowledge/list');
+        if (response.ok) {
+            const knowledge = await response.json();
+            displayKnowledgeList(knowledge);
+        }
+    } catch (error) {
+        console.error('Failed to load knowledge:', error);
+        document.getElementById('knowledgeList').innerHTML = 
+            '<div class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><p>Failed to load knowledge base</p></div>';
+    }
+}
+
+// Display knowledge list
+function displayKnowledgeList(knowledge) {
+    const container = document.getElementById('knowledgeList');
+    
+    if (!knowledge || knowledge.length === 0) {
+        container.innerHTML = 
+            '<div class="text-center text-muted py-4"><i class="fas fa-database fa-3x mb-3"></i><p>No knowledge base entries found</p></div>';
+        return;
+    }
+    
+    let html = '';
+    knowledge.forEach((item, index) => {
+        html += `
+            <div class="knowledge-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">${item.title || `Entry ${index + 1}`}</h6>
+                        <div class="text-muted small mb-2">${item.category || 'General'} • ${item.created_at || 'Unknown date'}</div>
+                        <p class="mb-2 small">${(item.content || '').substring(0, 150)}${item.content && item.content.length > 150 ? '...' : ''}</p>
+                        ${item.tags ? `<div class="mb-2">${item.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('')}</div>` : ''}
+                    </div>
+                    <div class="ms-3">
+                        <button class="btn btn-outline-primary btn-sm me-1" onclick="testKnowledgeItem('${item.id || index}')">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="deleteKnowledgeItem('${item.id || index}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Helper functions
+function clearSelection() {
+    selectedFile = null;
+    document.getElementById('fileInfo').style.display = 'none';
+    document.getElementById('pdfPreview').style.display = 'none';
+    document.getElementById('embedButton').disabled = true;
+    document.getElementById('pdfFileInput').value = '';
+    document.getElementById('embeddingProgress').style.width = '0%';
+}
+
+function refreshKnowledgeBase() {
+    loadKnowledgeBaseStats();
+    loadCurrentKnowledge();
+    showAlert('Knowledge base refreshed', 'info');
+}
+
+async function clearKnowledgeBase() {
+    if (!confirm('Are you sure you want to clear the entire knowledge base? This action cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/knowledge/clear', {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            showAlert('Knowledge base cleared successfully', 'success');
+            loadKnowledgeBaseStats();
+            loadCurrentKnowledge();
+        } else {
+            throw new Error('Failed to clear knowledge base');
+        }
+    } catch (error) {
+        console.error('Clear error:', error);
+        showAlert('Failed to clear knowledge base: ' + error.message, 'danger');
+    }
+}
+
+async function deleteKnowledgeItem(id) {
+    if (!confirm('Are you sure you want to delete this knowledge item?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/knowledge/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            showAlert('Knowledge item deleted successfully', 'success');
+            loadCurrentKnowledge();
+            loadKnowledgeBaseStats();
+        } else {
+            throw new Error('Failed to delete knowledge item');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        showAlert('Failed to delete knowledge item: ' + error.message, 'danger');
+    }
+}
+
+function testKnowledgeItem(id) {
+    // Open test modal and pre-fill with item content for testing
+    const modal = new bootstrap.Modal(document.getElementById('testQueryModal'));
+    modal.show();
+}
+
+async function executeTestQuery() {
+    const query = document.getElementById('testQuery').value;
+    if (!query) {
+        showAlert('Please enter a test query', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/rag/query/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query: query })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            document.getElementById('queryResults').innerHTML = `
+                <div class="alert alert-info">
+                    <h6>Query Results:</h6>
+                    <p><strong>Response:</strong> ${result.response || 'No response'}</p>
+                    <p><strong>Sources:</strong> ${result.sources ? result.sources.length : 0} documents found</p>
+                    <p><strong>Confidence:</strong> ${result.confidence || 'N/A'}</p>
+                </div>
+            `;
+            document.getElementById('queryResults').style.display = 'block';
+        } else {
+            throw new Error('Query failed');
+        }
+    } catch (error) {
+        console.error('Query error:', error);
+        showAlert('Query failed: ' + error.message, 'danger');
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function showAlert(message, type) {
+    // Create and show alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

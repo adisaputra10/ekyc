@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form eKYC - eKYC System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #dee2e6;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            position: relative;
+        }
+        .step.active {
+            background: #007bff;
+            color: white;
+        }
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 2px;
+            background: #dee2e6;
+            transform: translateY(-50%);
+        }
+        .step:last-child::after {
+            display: none;
+        }
+        .form-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shield-alt me-2"></i>
+                eKYC System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+            <div class="step" id="step4">4</div>
+        </div>
+
+        <form id="ekycForm">
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" id="step1Content">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>
+                            Informasi Personal
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Nama Lengkap *</label>
+                                    <input type="text" class="form-control" id="fullName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nik" class="form-label">NIK</label>
+                                    <input type="text" class="form-control" id="nik" maxlength="16" 
+                                           pattern="[0-9]{16}" placeholder="16 digit angka">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="birthPlace" class="form-label">Tempat Lahir</label>
+                                    <input type="text" class="form-control" id="birthPlace">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="birthDate" class="form-label">Tanggal Lahir</label>
+                                    <input type="date" class="form-control" id="birthDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Jenis Kelamin</label>
+                                    <select class="form-select" id="gender">
+                                        <option value="">Pilih...</option>
+                                        <option value="laki-laki">Laki-laki</option>
+                                        <option value="perempuan">Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="religion" class="form-label">Agama</label>
+                                    <select class="form-select" id="religion">
+                                        <option value="">Pilih...</option>
+                                        <option value="islam">Islam</option>
+                                        <option value="kristen">Kristen</option>
+                                        <option value="katolik">Katolik</option>
+                                        <option value="hindu">Hindu</option>
+                                        <option value="buddha">Buddha</option>
+                                        <option value="konghucu">Konghucu</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="maritalStatus" class="form-label">Status Pernikahan</label>
+                                    <select class="form-select" id="maritalStatus">
+                                        <option value="">Pilih...</option>
+                                        <option value="belum kawin">Belum Kawin</option>
+                                        <option value="kawin">Kawin</option>
+                                        <option value="cerai hidup">Cerai Hidup</option>
+                                        <option value="cerai mati">Cerai Mati</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="occupation" class="form-label">Pekerjaan</label>
+                                    <input type="text" class="form-control" id="occupation">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Address Information -->
+            <div class="form-step" id="step2Content" style="display: none;">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-home me-2"></i>
+                            Informasi Alamat
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="street" class="form-label">Alamat Jalan</label>
+                            <input type="text" class="form-control" id="street">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="rtRw" class="form-label">RT/RW</label>
+                                    <input type="text" class="form-control" id="rtRw" placeholder="001/002">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="village" class="form-label">Desa/Kelurahan</label>
+                                    <input type="text" class="form-control" id="village">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="district" class="form-label">Kecamatan</label>
+                                    <input type="text" class="form-control" id="district">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">Kota/Kabupaten</label>
+                                    <input type="text" class="form-control" id="city">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="province" class="form-label">Provinsi</label>
+                                    <input type="text" class="form-control" id="province">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="postalCode" class="form-label">Kode Pos</label>
+                                    <input type="text" class="form-control" id="postalCode" maxlength="5" pattern="[0-9]{5}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Contact Information -->
+            <div class="form-step" id="step3Content" style="display: none;">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-phone me-2"></i>
+                            Informasi Kontak
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Nomor Telepon *</label>
+                                    <input type="tel" class="form-control" id="phone" required placeholder="+62812345678">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="email@example.com">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emergencyContact" class="form-label">Kontak Darurat</label>
+                            <input type="tel" class="form-control" id="emergencyContact" placeholder="Nomor telepon kontak darurat">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Review & Submit -->
+            <div class="form-step" id="step4Content" style="display: none;">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-check me-2"></i>
+                            Review & Submit
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="reviewContent">
+                            <!-- Review content will be populated here -->
+                        </div>
+                        
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="agreement" required>
+                            <label class="form-check-label" for="agreement">
+                                Saya menyetujui <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">syarat dan ketentuan</a> 
+                                serta memberikan persetujuan untuk pemrosesan data personal saya.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Sebelumnya
+                </button>
+                <div></div>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                    Selanjutnya
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Submit eKYC
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Syarat dan Ketentuan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>1. Penggunaan Data</h6>
+                    <p>Data personal yang Anda berikan akan digunakan untuk proses verifikasi identitas dan keperluan eKYC sesuai dengan regulasi yang berlaku.</p>
+                    
+                    <h6>2. Keamanan Data</h6>
+                    <p>Kami berkomitmen untuk melindungi data personal Anda dengan standar keamanan tinggi dan enkripsi end-to-end.</p>
+                    
+                    <h6>3. Penyimpanan Data</h6>
+                    <p>Data akan disimpan sesuai dengan ketentuan regulasi dan akan dihapus setelah periode retensi yang ditetapkan.</p>
+                    
+                    <h6>4. Hak Pengguna</h6>
+                    <p>Anda memiliki hak untuk mengakses, mengubah, atau menghapus data personal Anda sesuai dengan peraturan yang berlaku.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            
+            if (newStep < 1 || newStep > totalSteps) return;
+            
+            // Validate current step before proceeding
+            if (direction > 0 && !validateStep(currentStep)) return;
+            
+            // Hide current step
+            document.getElementById(`step${currentStep}Content`).style.display = 'none';
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            
+            // Mark as completed if moving forward
+            if (direction > 0) {
+                document.getElementById(`step${currentStep}`).classList.add('completed');
+            }
+            
+            // Show new step
+            currentStep = newStep;
+            document.getElementById(`step${currentStep}Content`).style.display = 'block';
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Update buttons
+            updateButtons();
+            
+            // Update review if on last step
+            if (currentStep === totalSteps) {
+                updateReview();
+            }
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+            
+            if (step === 1) {
+                const fullName = document.getElementById('fullName').value;
+                if (!fullName.trim()) {
+                    alert('Nama lengkap harus diisi');
+                    isValid = false;
+                }
+            } else if (step === 3) {
+                const phone = document.getElementById('phone').value;
+                if (!phone.trim()) {
+                    alert('Nomor telepon harus diisi');
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+            nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
+            submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+        }
+
+        function updateReview() {
+            const reviewContent = document.getElementById('reviewContent');
+            
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                nik: document.getElementById('nik').value,
+                birthPlace: document.getElementById('birthPlace').value,
+                birthDate: document.getElementById('birthDate').value,
+                gender: document.getElementById('gender').value,
+                religion: document.getElementById('religion').value,
+                maritalStatus: document.getElementById('maritalStatus').value,
+                occupation: document.getElementById('occupation').value,
+                street: document.getElementById('street').value,
+                rtRw: document.getElementById('rtRw').value,
+                village: document.getElementById('village').value,
+                district: document.getElementById('district').value,
+                city: document.getElementById('city').value,
+                province: document.getElementById('province').value,
+                postalCode: document.getElementById('postalCode').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                emergencyContact: document.getElementById('emergencyContact').value
+            };
+            
+            reviewContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Informasi Personal</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Nama:</strong> ${formData.fullName || '-'}</li>
+                            <li><strong>NIK:</strong> ${formData.nik || '-'}</li>
+                            <li><strong>Tempat/Tgl Lahir:</strong> ${formData.birthPlace || '-'} / ${formData.birthDate || '-'}</li>
+                            <li><strong>Jenis Kelamin:</strong> ${formData.gender || '-'}</li>
+                            <li><strong>Agama:</strong> ${formData.religion || '-'}</li>
+                            <li><strong>Status:</strong> ${formData.maritalStatus || '-'}</li>
+                            <li><strong>Pekerjaan:</strong> ${formData.occupation || '-'}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Alamat</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Jalan:</strong> ${formData.street || '-'}</li>
+                            <li><strong>RT/RW:</strong> ${formData.rtRw || '-'}</li>
+                            <li><strong>Desa/Kel:</strong> ${formData.village || '-'}</li>
+                            <li><strong>Kecamatan:</strong> ${formData.district || '-'}</li>
+                            <li><strong>Kota:</strong> ${formData.city || '-'}</li>
+                            <li><strong>Provinsi:</strong> ${formData.province || '-'}</li>
+                            <li><strong>Kode Pos:</strong> ${formData.postalCode || '-'}</li>
+                        </ul>
+                        
+                        <h6>Kontak</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Telepon:</strong> ${formData.phone || '-'}</li>
+                            <li><strong>Email:</strong> ${formData.email || '-'}</li>
+                            <li><strong>Kontak Darurat:</strong> ${formData.emergencyContact || '-'}</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Form submission
+        document.getElementById('ekycForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const agreement = document.getElementById('agreement').checked;
+            if (!agreement) {
+                alert('Anda harus menyetujui syarat dan ketentuan');
+                return;
+            }
+            
+            // Create FormData to match backend expectations
+            const formData = new FormData();
+            
+            // Personal data fields
+            formData.append('full_name', document.getElementById('fullName').value);
+            formData.append('id_number', document.getElementById('nik').value);
+            formData.append('birth_place', document.getElementById('birthPlace').value);
+            formData.append('birth_date', document.getElementById('birthDate').value);
+            formData.append('gender', document.getElementById('gender').value);
+            formData.append('religion', document.getElementById('religion').value);
+            formData.append('marital_status', document.getElementById('maritalStatus').value);
+            formData.append('occupation', document.getElementById('occupation').value);
+            formData.append('nationality', 'Indonesia');
+            
+            // Address data fields
+            formData.append('street', document.getElementById('street').value);
+            formData.append('rt_rw', document.getElementById('rtRw').value);
+            formData.append('village', document.getElementById('village').value);
+            formData.append('district', document.getElementById('district').value);
+            formData.append('city', document.getElementById('city').value);
+            formData.append('province', document.getElementById('province').value);
+            formData.append('postal_code', document.getElementById('postalCode').value);
+            
+            // Contact data fields
+            formData.append('phone', document.getElementById('phone').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('emergency_contact_name', document.getElementById('emergencyContact').value);
+            formData.append('emergency_contact_phone', document.getElementById('emergencyContact').value);
+            
+            // Document data fields (optional, can be added later)
+            formData.append('document_type', 'KTP');
+            formData.append('document_number', '');
+            formData.append('issued_date', '');
+            formData.append('expiry_date', '');
+            formData.append('issuing_authority', '');
+            
+            try {
+                const response = await fetch('/submit-ekyc', {
+                    method: 'POST',
+                    body: formData  // Remove Content-Type header to let browser set it for FormData
+                });
+                
+                if (response.ok) {
+                    await response.text(); // Backend returns HTML template, consume the response
+                    alert('Form eKYC berhasil disubmit!');
+                    
+                    // Redirect to upload page or success page
+                    if (confirm('Apakah Anda ingin upload dokumen sekarang?')) {
+                        window.location.href = '/upload';
+                    } else {
+                        window.location.href = '/';
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server response:', errorText);
+                    throw new Error('Submission failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Gagal submit form. Silakan coba lagi.');
+            }
+        });
+    </script>
+</body>
+</html>

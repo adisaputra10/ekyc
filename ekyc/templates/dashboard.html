@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKYC Dashboard - Sistem Verifikasi Dokumen AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>eKYC System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-robot me-1"></i>AI-Powered Document Verification
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Stats Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-alt fa-2x mb-2"></i>
+                        <h4 id="totalDocs">0</h4>
+                        <p class="mb-0">Dokumen Diproses</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 id="verifiedDocs">0</h4>
+                        <p class="mb-0">Terverifikasi</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <h4 id="avgTime">0s</h4>
+                        <p class="mb-0">Rata-rata Waktu</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-brain fa-2x mb-2"></i>
+                        <h4 id="avgConfidence">0%</h4>
+                        <p class="mb-0">Rata-rata Akurasi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload" type="button" role="tab">
+                    <i class="fas fa-upload me-2"></i>Upload Dokumen
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="chat-tab" data-bs-toggle="pill" data-bs-target="#chat" type="button" role="tab">
+                    <i class="fas fa-comments me-2"></i>RAG Chat
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="history-tab" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">
+                    <i class="fas fa-history me-2"></i>Riwayat
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="knowledge-tab" data-bs-toggle="pill" data-bs-target="#knowledge" type="button" role="tab">
+                    <i class="fas fa-database me-2"></i>Knowledge Base
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Upload Tab -->
+            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-cloud-upload-alt me-2"></i>Upload Dokumen</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="upload-zone" id="uploadZone">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                    <h5>Drag & Drop dokumen di sini</h5>
+                                    <p class="text-muted">atau klik untuk memilih file</p>
+                                    <p class="small text-muted">Mendukung: JPG, PNG, PDF (max 10MB)</p>
+                                    <input type="file" id="fileInput" class="d-none" accept=".jpg,.jpeg,.png,.pdf">
+                                </div>
+                                
+                                <div class="progress-container">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>Memproses dokumen...</span>
+                                        <span id="progressText">0%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                             id="progressBar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Result Card -->
+                        <div class="card result-card" id="resultCard">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fas fa-search me-2"></i>Hasil Analisis</h5>
+                                <span class="badge" id="statusBadge"></span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Confidence Score:</h6>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="confidence-bar bg-light flex-grow-1 me-2">
+                                                <div class="bg-success" id="confidenceBar" style="width: 0%; height: 100%;"></div>
+                                            </div>
+                                            <span id="confidenceText">0%</span>
+                                        </div>
+                                        
+                                        <h6>Waktu Pemrosesan:</h6>
+                                        <p id="processingTime">-</p>
+                                        
+                                        <h6>Status Verifikasi:</h6>
+                                        <p id="verificationStatus">-</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Preview Dokumen:</h6>
+                                        <img id="documentPreview" class="document-preview" style="display: none;">
+                                    </div>
+                                </div>
+                                
+                                <div class="extracted-data" id="extractedData" style="display: none;">
+                                    <h6><i class="fas fa-extract me-2"></i>Data yang Diekstrak:</h6>
+                                    <div id="extractedFields"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Panduan Upload</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-lightbulb me-2"></i>Tips untuk hasil terbaik:</h6>
+                                    <ul class="mb-0 small">
+                                        <li>Pastikan dokumen dalam kondisi baik</li>
+                                        <li>Foto dengan pencahayaan yang cukup</li>
+                                        <li>Hindari bayangan dan silau</li>
+                                        <li>Posisi dokumen lurus dan jelas</li>
+                                        <li>Resolusi minimal 300 DPI</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="alert alert-warning">
+                                    <h6><i class="fas fa-shield-alt me-2"></i>Keamanan Data:</h6>
+                                    <p class="mb-0 small">
+                                        Data Anda dienkripsi dan diproses sesuai standar keamanan tinggi. 
+                                        File akan dihapus otomatis setelah pemrosesan.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div class="tab-pane fade" id="chat" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-robot me-2"></i>RAG Chat - Tanya tentang eKYC</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chat-container" id="chatContainer">
+                                    <div class="chat-message bot-message">
+                                        <strong>AI Assistant:</strong><br>
+                                        Halo! Saya adalah asisten AI untuk sistem eKYC. Anda bisa bertanya tentang:
+                                        <ul class="mt-2 mb-0">
+                                            <li>Persyaratan dokumen identitas</li>
+                                            <li>Proses verifikasi eKYC</li>
+                                            <li>Validasi NIK dan format dokumen</li>
+                                            <li>Troubleshooting dan panduan</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="typing-indicator" id="typingIndicator">
+                                    <i class="fas fa-robot me-2"></i>AI sedang mengetik...
+                                </div>
+                                
+                                <div class="input-group mt-3">
+                                    <input type="text" class="form-control" id="chatInput" 
+                                           placeholder="Tanya seputar eKYC... (contoh: Apa saja persyaratan untuk membuat KTP?)">
+                                    <button class="btn btn-primary" type="button" id="sendChatBtn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-question-circle me-2"></i>Contoh Pertanyaan</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary btn-sm text-start chat-example" 
+                                            data-question="Apa saja persyaratan untuk membuat KTP?">
+                                        <i class="fas fa-id-card me-2"></i>Persyaratan KTP
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm text-start chat-example" 
+                                            data-question="Bagaimana cara validasi NIK?">
+                                        <i class="fas fa-check me-2"></i>Validasi NIK
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm text-start chat-example" 
+                                            data-question="Dokumen apa saja yang diterima sistem eKYC?">
+                                        <i class="fas fa-file-alt me-2"></i>Jenis Dokumen
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm text-start chat-example" 
+                                            data-question="Bagaimana proses verifikasi eKYC?">
+                                        <i class="fas fa-shield-alt me-2"></i>Proses Verifikasi
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm text-start chat-example" 
+                                            data-question="Apa yang harus dilakukan jika gambar blur?">
+                                        <i class="fas fa-question me-2"></i>Troubleshooting
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-pane fade" id="history" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Riwayat Pemrosesan</h5>
+                        <button class="btn btn-outline-primary btn-sm" id="refreshHistoryBtn">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Waktu</th>
+                                        <th>Nama File</th>
+                                        <th>Jenis Dokumen</th>
+                                        <th>Status</th>
+                                        <th>Confidence</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                            Belum ada riwayat pemrosesan
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Knowledge Base Tab -->
+            <div class="tab-pane fade" id="knowledge" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-database me-2"></i>Knowledge Base Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="addKnowledgeForm">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="knowledgeTitle" class="form-label">Judul</label>
+                                                <input type="text" class="form-control" id="knowledgeTitle" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="knowledgeCategory" class="form-label">Kategori</label>
+                                                <select class="form-select" id="knowledgeCategory">
+                                                    <option value="dokumen">Dokumen</option>
+                                                    <option value="validasi">Validasi</option>
+                                                    <option value="proses">Proses</option>
+                                                    <option value="keamanan">Keamanan</option>
+                                                    <option value="troubleshooting">Troubleshooting</option>
+                                                    <option value="regulasi">Regulasi</option>
+                                                    <option value="integrasi">Integrasi</option>
+                                                    <option value="general">General</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="knowledgeTags" class="form-label">Tags (pisah dengan koma)</label>
+                                        <input type="text" class="form-control" id="knowledgeTags" 
+                                               placeholder="contoh: ktp, validasi, nik">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="knowledgeContent" class="form-label">Konten</label>
+                                        <textarea class="form-control" id="knowledgeContent" rows="6" required
+                                                  placeholder="Masukkan konten knowledge base..."></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Tambah Knowledge
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-search me-2"></i>Cari Knowledge</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="searchKnowledge" 
+                                           placeholder="Cari knowledge...">
+                                    <button class="btn btn-outline-secondary" type="button" id="searchKnowledgeBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                
+                                <div id="knowledgeSearchResults">
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-search fa-2x mb-2"></i><br>
+                                        Masukkan kata kunci untuk mencari
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Alert -->
+    <div id="floatingAlert" class="alert alert-success alert-dismissible alert-floating" style="display: none;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <span id="alertMessage"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

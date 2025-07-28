@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Upload Akta</title>
+</head>
+<body>
+    <h1>Test Upload Akta Perusahaan</h1>
+    <form action="http://localhost:8000/upload-document/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".txt,.png,.jpg,.jpeg,.pdf" required>
+        <select name="document_type" required>
+            <option value="">Pilih Document Type</option>
+            <option value="ktp">KTP</option>
+            <option value="akta_perusahaan">Akta Perusahaan</option>
+            <option value="passport">Passport</option>
+            <option value="sim">SIM</option>
+            <option value="other">Other</option>
+        </select>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

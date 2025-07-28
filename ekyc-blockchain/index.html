@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKYC Blockchain Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-nav">
+                <nav>
+                    <a href="index.html" class="nav-link active">eKYC Verification</a>
+                    <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+                </nav>
+            </div>
+            <h1>🔐 eKYC Blockchain Verification</h1>
+            <p>Secure identity verification with blockchain technology</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Step Progress -->
+            <div class="step-progress">
+                <div class="step active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Personal Info</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Document Upload</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Biometric</span>
+                </div>
+                <div class="step" data-step="4">
+                    <span class="step-number">4</span>
+                    <span class="step-label">Blockchain Verify</span>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <!-- Step 1: Personal Information -->
+                <div class="form-step active" id="step-1">
+                    <h2>Personal Information</h2>
+                    <form id="personal-info-form">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth *</label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nationalId">National ID Number *</label>
+                            <input type="text" id="nationalId" name="nationalId" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address *</label>
+                            <textarea id="address" name="address" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary next-step">Next Step</button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Document Upload -->
+                <div class="form-step" id="step-2">
+                    <h2>Document Upload</h2>
+                    <div class="upload-section">
+                        <div class="upload-group">
+                            <label>National ID Card *</label>
+                            <div class="upload-area" id="id-card-upload">
+                                <div class="upload-content">
+                                    <i class="upload-icon">📄</i>
+                                    <p>Drag & drop your ID card image or click to browse</p>
+                                    <input type="file" id="idCard" accept="image/*" hidden>
+                                </div>
+                                <div class="preview-area" id="id-preview" style="display: none;">
+                                    <img id="id-preview-img" alt="ID Preview">
+                                    <button type="button" class="remove-file">×</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-group">
+                            <label>Proof of Address *</label>
+                            <div class="upload-area" id="address-proof-upload">
+                                <div class="upload-content">
+                                    <i class="upload-icon">📋</i>
+                                    <p>Upload utility bill or bank statement</p>
+                                    <input type="file" id="addressProof" accept="image/*,application/pdf" hidden>
+                                </div>
+                                <div class="preview-area" id="address-preview" style="display: none;">
+                                    <img id="address-preview-img" alt="Address Proof Preview">
+                                    <button type="button" class="remove-file">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next Step</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Biometric Verification -->
+                <div class="form-step" id="step-3">
+                    <h2>Biometric Verification</h2>
+                    <div class="biometric-section">
+                        <div class="camera-container">
+                            <video id="camera" autoplay playsinline></video>
+                            <canvas id="photo-canvas" style="display: none;"></canvas>
+                            <div class="capture-overlay">
+                                <div class="face-outline"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="captured-photo" id="captured-photo" style="display: none;">
+                            <img id="captured-img" alt="Captured Photo">
+                            <button type="button" class="btn btn-secondary" id="retake-photo">Retake Photo</button>
+                        </div>
+                        
+                        <div class="biometric-controls">
+                            <button type="button" class="btn btn-info" id="start-camera">Start Camera</button>
+                            <button type="button" class="btn btn-primary" id="capture-photo" style="display: none;">Capture Photo</button>
+                        </div>
+                        
+                        <div class="biometric-status" id="biometric-status">
+                            <p>Please position your face within the frame and capture a clear photo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step" id="proceed-to-blockchain" disabled>Proceed to Blockchain</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Blockchain Verification -->
+                <div class="form-step" id="step-4">
+                    <h2>Blockchain Verification</h2>
+                    <div class="blockchain-section">
+                        <div class="verification-status" id="verification-status">
+                            <div class="status-item">
+                                <span class="status-label">Wallet Connection:</span>
+                                <span class="status-value" id="wallet-status">Not Connected</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Network:</span>
+                                <span class="status-value" id="network-status">-</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Smart Contract:</span>
+                                <span class="status-value" id="contract-status">Not Deployed</span>
+                            </div>
+                        </div>
+                        
+                        <div class="blockchain-actions">
+                            <button type="button" class="btn btn-info" id="connect-wallet">Connect Wallet</button>
+                            <button type="button" class="btn btn-warning" id="deploy-contract" disabled>Deploy Smart Contract</button>
+                            <button type="button" class="btn btn-success" id="mint-token" disabled>Mint Verification Token</button>
+                        </div>
+                        
+                        <div class="transaction-details" id="transaction-details" style="display: none;">
+                            <h3>Transaction Details</h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Transaction Hash:</span>
+                                <span class="detail-value" id="tx-hash">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Token ID:</span>
+                                <span class="detail-value" id="token-id">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Verification Status:</span>
+                                <span class="detail-value" id="final-status">Pending</span>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-certificate" id="verification-certificate" style="display: none;">
+                            <h3>🎉 eKYC Verification Complete!</h3>
+                            <p>Your identity has been successfully verified and recorded on the blockchain.</p>
+                            <div class="certificate-details">
+                                <p><strong>Verification Token:</strong> <span id="cert-token-id"></span></p>
+                                <p><strong>Blockchain Address:</strong> <span id="cert-address"></span></p>
+                                <p><strong>Timestamp:</strong> <span id="cert-timestamp"></span></p>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="download-certificate">Download Certificate</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary" id="complete-verification" style="display: none;">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p id="loading-text">Processing...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="smart-contract.js"></script>
+    <script src="blockchain-utils.js"></script>
+    <script src="demo-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

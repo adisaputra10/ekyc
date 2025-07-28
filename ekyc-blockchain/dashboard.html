@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKYC Dashboard - Blockchain Verification Records</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>🔐 eKYC Dashboard</h1>
+                    <p>Blockchain Verification Records & Management</p>
+                </div>
+                
+                <div class="header-nav">
+                    <nav>
+                        <a href="index.html" class="nav-link">🔒 New Verification</a>
+                        <a href="dashboard.html" class="nav-link active">📊 Dashboard</a>
+                    </nav>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="new-verification">
+                        ➕ New Verification
+                    </button>
+                    <button class="btn btn-info" id="refresh-data">
+                        🔄 Refresh
+                    </button>
+                    <button class="btn btn-secondary" id="export-data">
+                        📥 Export Data
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3 id="total-users">0</h3>
+                        <p>Total Verified Users</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🏷️</div>
+                    <div class="stat-content">
+                        <h3 id="total-tokens">0</h3>
+                        <p>Verification Tokens</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⛓️</div>
+                    <div class="stat-content">
+                        <h3 id="total-transactions">0</h3>
+                        <p>Blockchain Transactions</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <h3 id="success-rate">100%</h3>
+                        <p>Success Rate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter and Search -->
+        <section class="filter-section">
+            <div class="filter-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search by name, token ID, or address...">
+                    <button id="search-btn">🔍</button>
+                </div>
+                
+                <div class="filter-controls">
+                    <select id="status-filter">
+                        <option value="">All Status</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    
+                    <select id="date-filter">
+                        <option value="">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                    
+                    <button id="clear-filters" class="btn btn-outline">Clear Filters</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verification Records Table -->
+        <section class="records-section">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Verification Records</h2>
+                    <div class="table-actions">
+                        <button id="bulk-actions" class="btn btn-outline">Bulk Actions</button>
+                        <select id="per-page">
+                            <option value="10">10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="verification-table" id="verification-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th>Token ID</th>
+                                <th>User Name</th>
+                                <th>Wallet Address</th>
+                                <th>Status</th>
+                                <th>Verification Date</th>
+                                <th>Transaction Hash</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="verification-tbody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing <span id="showing-start">1</span> to <span id="showing-end">10</span> 
+                        of <span id="total-records">0</span> records
+                    </div>
+                    
+                    <div class="pagination-controls">
+                        <button id="prev-page" class="btn btn-outline" disabled>← Previous</button>
+                        <div id="page-numbers"></div>
+                        <button id="next-page" class="btn btn-outline" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <div class="empty-content">
+                <div class="empty-icon">📋</div>
+                <h3>No Verification Records Found</h3>
+                <p>No eKYC verifications have been completed yet.</p>
+                <button class="btn btn-primary" id="create-first-verification">
+                    Create First Verification
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Detail Modal -->
+    <div class="modal-overlay" id="detail-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Verification Details</h3>
+                <button class="modal-close" id="close-detail-modal">×</button>
+            </div>
+            
+            <div class="modal-body" id="detail-modal-body">
+                <!-- Detail content akan diisi oleh JavaScript -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="download-certificate-modal">Download Certificate</button>
+                <button class="btn btn-primary" id="verify-on-blockchain">Verify on Blockchain</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loading-text">Loading verification records...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="smart-contract.js"></script>
+    <script src="blockchain-utils.js"></script>
+    <script src="demo-data.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

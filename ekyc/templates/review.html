@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+
+{% block title %}Manual Review - eKYC System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pending-review">
+                            <i class="fas fa-clock text-warning me-2"></i>
+                            Pending Review
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recent-decisions">
+                            <i class="fas fa-history text-info me-2"></i>
+                            Recent Decisions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#statistics">
+                            <i class="fas fa-chart-bar text-success me-2"></i>
+                            Statistics
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="fas fa-user-check me-2"></i>
+                    Manual Review Dashboard
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshData()">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="h5 mb-0" id="pending-count">-</div>
+                                    <div class="small">Pending Review</div>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-clock fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="h5 mb-0" id="approved-count">-</div>
+                                    <div class="small">Approved Today</div>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-check fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="h5 mb-0" id="rejected-count">-</div>
+                                    <div class="small">Rejected Today</div>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-times fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="h5 mb-0" id="total-count">-</div>
+                                    <div class="small">Total Today</div>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-file-alt fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Review Section -->
+            <section id="pending-review">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-clock text-warning me-2"></i>
+                            Documents Pending Review
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Document ID</th>
+                                        <th>Type</th>
+                                        <th>Name</th>
+                                        <th>Upload Time</th>
+                                        <th>AI Confidence</th>
+                                        <th>Current Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pending-docs-tbody">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Loading...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Review Modal -->
+            <div class="modal fade" id="reviewModal" tabindex="-1">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Document Review</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- Document Info -->
+                                <div class="col-md-6">
+                                    <h6>Document Information</h6>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p><strong>Document ID:</strong> <span id="modal-doc-id"></span></p>
+                                            <p><strong>Type:</strong> <span id="modal-doc-type"></span></p>
+                                            <p><strong>Upload Time:</strong> <span id="modal-upload-time"></span></p>
+                                            <p><strong>AI Confidence:</strong> <span id="modal-confidence"></span></p>
+                                            <p><strong>Current Status:</strong> <span id="modal-current-status"></span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Extracted Data -->
+                                    <h6 class="mt-3">Extracted Data</h6>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div id="extracted-data"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Document Preview -->
+                                <div class="col-md-6">
+                                    <h6>Document Preview</h6>
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <img id="document-image" class="img-fluid" style="max-height: 400px;" alt="Document">
+                                        </div>
+                                    </div>
+
+                                    <!-- Review Notes -->
+                                    <h6 class="mt-3">Review Notes</h6>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <textarea id="review-notes" class="form-control" rows="4" placeholder="Enter review notes..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" onclick="makeDecision('REJECTED')">
+                                <i class="fas fa-times me-1"></i>Reject
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="makeDecision('VERIFIED')">
+                                <i class="fas fa-check me-1"></i>Approve
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Decisions Section -->
+            <section id="recent-decisions">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-history text-info me-2"></i>
+                            Recent Review Decisions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Document ID</th>
+                                        <th>Type</th>
+                                        <th>Decision</th>
+                                        <th>Reviewer</th>
+                                        <th>Review Time</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-decisions-tbody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Loading...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+let currentDocumentId = null;
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadPendingDocuments();
+    loadRecentDecisions();
+    loadStatistics();
+});
+
+async function refreshData() {
+    loadPendingDocuments();
+    loadRecentDecisions();
+    loadStatistics();
+}
+
+async function loadStatistics() {
+    try {
+        const response = await fetch('/api/review/stats');
+        const stats = await response.json();
+        
+        document.getElementById('pending-count').textContent = stats.pending || 0;
+        document.getElementById('approved-count').textContent = stats.approved_today || 0;
+        document.getElementById('rejected-count').textContent = stats.rejected_today || 0;
+        document.getElementById('total-count').textContent = stats.total_today || 0;
+    } catch (error) {
+        console.error('Error loading statistics:', error);
+    }
+}
+
+async function loadPendingDocuments() {
+    try {
+        const response = await fetch('/api/review/pending');
+        const documents = await response.json();
+        
+        const tbody = document.getElementById('pending-docs-tbody');
+        
+        if (documents.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No documents pending review</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = documents.map(doc => `
+            <tr>
+                <td><code>${doc.id}</code></td>
+                <td><span class="badge bg-secondary">${doc.document_type}</span></td>
+                <td>${doc.extracted_data?.name || 'N/A'}</td>
+                <td>${new Date(doc.upload_time).toLocaleString()}</td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar ${getConfidenceColor(doc.confidence)}" 
+                             style="width: ${(doc.confidence * 100).toFixed(1)}%">
+                            ${(doc.confidence * 100).toFixed(1)}%
+                        </div>
+                    </div>
+                </td>
+                <td><span class="badge bg-warning">${doc.verification_status}</span></td>
+                <td>
+                    <button class="btn btn-primary btn-sm" onclick="openReviewModal('${doc.id}')">
+                        <i class="fas fa-eye me-1"></i>Review
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading pending documents:', error);
+        document.getElementById('pending-docs-tbody').innerHTML = 
+            '<tr><td colspan="7" class="text-center text-danger">Error loading documents</td></tr>';
+    }
+}
+
+async function loadRecentDecisions() {
+    try {
+        const response = await fetch('/api/review/recent');
+        const decisions = await response.json();
+        
+        const tbody = document.getElementById('recent-decisions-tbody');
+        
+        if (decisions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No recent decisions</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = decisions.map(decision => `
+            <tr>
+                <td><code>${decision.document_id}</code></td>
+                <td><span class="badge bg-secondary">${decision.document_type}</span></td>
+                <td><span class="badge ${getStatusColor(decision.decision)}">${decision.decision}</span></td>
+                <td>${decision.reviewer || 'Admin'}</td>
+                <td>${new Date(decision.review_time).toLocaleString()}</td>
+                <td>${decision.notes || '-'}</td>
+            </tr>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading recent decisions:', error);
+        document.getElementById('recent-decisions-tbody').innerHTML = 
+            '<tr><td colspan="6" class="text-center text-danger">Error loading decisions</td></tr>';
+    }
+}
+
+async function openReviewModal(documentId) {
+    try {
+        const response = await fetch(`/api/documents/${documentId}`);
+        const doc = await response.json();
+        
+        currentDocumentId = documentId;
+        
+        // Populate modal with document data
+        document.getElementById('modal-doc-id').textContent = doc.id;
+        document.getElementById('modal-doc-type').textContent = doc.document_type;
+        document.getElementById('modal-upload-time').textContent = new Date(doc.upload_time).toLocaleString();
+        document.getElementById('modal-confidence').innerHTML = `
+            <div class="progress" style="height: 20px;">
+                <div class="progress-bar ${getConfidenceColor(doc.confidence)}" 
+                     style="width: ${(doc.confidence * 100).toFixed(1)}%">
+                    ${(doc.confidence * 100).toFixed(1)}%
+                </div>
+            </div>
+        `;
+        document.getElementById('modal-current-status').innerHTML = 
+            `<span class="badge bg-warning">${doc.verification_status}</span>`;
+        
+        // Show extracted data
+        const extractedDataDiv = document.getElementById('extracted-data');
+        extractedDataDiv.innerHTML = Object.entries(doc.extracted_data || {})
+            .map(([key, value]) => `<p><strong>${key}:</strong> ${value}</p>`)
+            .join('');
+        
+        // Show document image
+        document.getElementById('document-image').src = `/api/documents/${documentId}/image`;
+        
+        // Clear review notes
+        document.getElementById('review-notes').value = '';
+        
+        // Show modal
+        new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        
+    } catch (error) {
+        console.error('Error loading document details:', error);
+        alert('Error loading document details');
+    }
+}
+
+async function makeDecision(decision) {
+    if (!currentDocumentId) return;
+    
+    const notes = document.getElementById('review-notes').value;
+    
+    try {
+        const response = await fetch(`/api/review/${currentDocumentId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                decision: decision,
+                notes: notes,
+                reviewer: 'Admin' // In real app, get from session
+            })
+        });
+        
+        if (response.ok) {
+            // Close modal
+            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+            
+            // Refresh data
+            await refreshData();
+            
+            // Show success message
+            showAlert(`Document ${decision.toLowerCase()} successfully`, 'success');
+        } else {
+            const error = await response.json();
+            showAlert(`Error: ${error.detail}`, 'danger');
+        }
+        
+    } catch (error) {
+        console.error('Error making decision:', error);
+        showAlert('Error making review decision', 'danger');
+    }
+}
+
+function getConfidenceColor(confidence) {
+    if (confidence >= 0.8) return 'bg-success';
+    if (confidence >= 0.6) return 'bg-warning';
+    return 'bg-danger';
+}
+
+function getStatusColor(status) {
+    switch (status) {
+        case 'VERIFIED': return 'bg-success';
+        case 'REJECTED': return 'bg-danger';
+        case 'PENDING': return 'bg-warning';
+        default: return 'bg-secondary';
+    }
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

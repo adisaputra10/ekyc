@@ -1,0 +1,566 @@
+2025-07-27 09:58:47,339 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:404 duration:0.239s]
+2025-07-27 09:58:47,820 - elastic_transport.transport - INFO - PUT http://localhost:9200/document_validation [status:200 duration:0.480s]
+2025-07-27 09:58:47,821 - elasticsearch_rag - INFO - Created index: document_validation
+2025-07-27 09:58:47,834 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.012s]
+2025-07-27 09:58:58,755 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:58:59,358 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.591s]
+2025-07-27 09:58:59,359 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 09:58:59,377 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.018s]
+2025-07-27 09:59:00,146 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:00,256 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.102s]
+2025-07-27 09:59:00,256 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 09:59:00,265 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.008s]
+2025-07-27 09:59:00,786 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:00,923 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.132s]
+2025-07-27 09:59:00,925 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 09:59:00,937 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.008s]
+2025-07-27 09:59:02,329 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:02,666 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.323s]
+2025-07-27 09:59:02,667 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 09:59:02,681 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.013s]
+2025-07-27 09:59:04,933 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:05,045 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.107s]
+2025-07-27 09:59:05,045 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 09:59:05,054 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 09:59:05,374 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:05,469 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.091s]
+2025-07-27 09:59:05,470 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 09:59:05,470 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 09:59:05,470 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 09:59:05,471 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp.png
+2025-07-27 09:59:05,471 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 09:59:16,074 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 09:59:16,075 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 09:59:16,922 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:17,003 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:400 duration:0.077s]
+2025-07-27 09:59:17,003 - elasticsearch_rag - ERROR - Error searching documents: BadRequestError(400, 'x_content_parse_exception', '[document_type] query malformed, no start_object after query name')
+2025-07-27 09:59:17,004 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 09:59:20,950 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 09:59:20,968 - openai_validator - ERROR - Error validating KTP with OpenAI: Expecting value: line 1 column 1 (char 0)
+2025-07-27 09:59:20,975 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 09:59:21,529 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:21,801 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.263s]
+2025-07-27 09:59:21,803 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_095920
+2025-07-27 09:59:21,807 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 09:59:21,817 - document_validator - INFO - Starting Akta validation for: D:\repo\ekyc_openai\akta.pdf
+2025-07-27 09:59:21,818 - document_validator - INFO - Extracting text from Akta PDF...
+2025-07-27 09:59:22,285 - document_validator - INFO - Extracting Akta fields...
+2025-07-27 09:59:22,354 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 09:59:22,740 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:22,760 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:400 duration:0.009s]
+2025-07-27 09:59:22,764 - elasticsearch_rag - ERROR - Error searching documents: BadRequestError(400, 'x_content_parse_exception', '[document_type] query malformed, no start_object after query name')
+2025-07-27 09:59:22,765 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 09:59:27,435 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 09:59:27,437 - openai_validator - ERROR - Error validating Akta with OpenAI: Expecting value: line 1 column 1 (char 0)
+2025-07-27 09:59:27,451 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 09:59:29,644 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:32,994 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:2.095s]
+2025-07-27 09:59:33,000 - elasticsearch_rag - INFO - Indexed 106 chunks for document akta_20250727_095927
+2025-07-27 09:59:33,002 - document_validator - INFO - Akta validation completed. Valid: False
+2025-07-27 09:59:33,003 - document_validator - INFO - Starting comprehensive document validation...
+2025-07-27 09:59:33,004 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp.png
+2025-07-27 09:59:33,004 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 09:59:51,506 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 09:59:51,506 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 09:59:51,892 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:51,947 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:400 duration:0.048s]
+2025-07-27 09:59:51,948 - elasticsearch_rag - ERROR - Error searching documents: BadRequestError(400, 'x_content_parse_exception', '[document_type] query malformed, no start_object after query name')
+2025-07-27 09:59:51,948 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 09:59:56,150 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 09:59:56,158 - openai_validator - ERROR - Error validating KTP with OpenAI: Expecting value: line 1 column 1 (char 0)
+2025-07-27 09:59:56,211 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 09:59:57,769 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:57,946 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.170s]
+2025-07-27 09:59:57,947 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_095956
+2025-07-27 09:59:57,948 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 09:59:57,949 - document_validator - INFO - Starting Akta validation for: D:\repo\ekyc_openai\akta.pdf
+2025-07-27 09:59:57,949 - document_validator - INFO - Extracting text from Akta PDF...
+2025-07-27 09:59:58,180 - document_validator - INFO - Extracting Akta fields...
+2025-07-27 09:59:58,256 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 09:59:58,582 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 09:59:58,595 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:400 duration:0.008s]
+2025-07-27 09:59:58,598 - elasticsearch_rag - ERROR - Error searching documents: BadRequestError(400, 'x_content_parse_exception', '[document_type] query malformed, no start_object after query name')
+2025-07-27 09:59:58,598 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:00:06,182 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:00:06,193 - openai_validator - ERROR - Error validating Akta with OpenAI: Expecting value: line 1 column 1 (char 0)
+2025-07-27 10:00:06,214 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.011s]
+2025-07-27 10:00:07,134 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:00:09,128 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.718s]
+2025-07-27 10:00:09,133 - elasticsearch_rag - INFO - Indexed 106 chunks for document akta_20250727_100006
+2025-07-27 10:00:09,133 - document_validator - INFO - Akta validation completed. Valid: False
+2025-07-27 10:00:13,784 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:00:13,787 - openai_validator - ERROR - Error generating validation report: Expecting value: line 1 column 1 (char 0)
+2025-07-27 10:01:52,113 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.042s]
+2025-07-27 10:01:52,121 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:01:52,856 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:52,935 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.070s]
+2025-07-27 10:01:52,936 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:01:52,944 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:01:53,275 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:53,347 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.065s]
+2025-07-27 10:01:53,347 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:01:53,354 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:01:54,512 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:54,613 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.097s]
+2025-07-27 10:01:54,614 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:01:54,622 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:01:55,331 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:55,428 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.094s]
+2025-07-27 10:01:55,429 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:01:55,436 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:01:56,291 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:56,384 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.089s]
+2025-07-27 10:01:56,385 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:01:56,391 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:01:56,715 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:01:56,801 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.082s]
+2025-07-27 10:01:56,802 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:01:56,802 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:01:56,802 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:01:56,803 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp.png
+2025-07-27 10:01:56,803 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:02:08,326 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:02:08,327 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:02:08,784 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:09,062 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.274s]
+2025-07-27 10:02:09,063 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:02:12,870 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:02:12,879 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:02:12,885 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:02:13,216 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:13,303 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.082s]
+2025-07-27 10:02:13,304 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_100212
+2025-07-27 10:02:13,304 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:02:13,305 - document_validator - INFO - Starting Akta validation for: D:\repo\ekyc_openai\akta.pdf
+2025-07-27 10:02:13,305 - document_validator - INFO - Extracting text from Akta PDF...
+2025-07-27 10:02:13,425 - document_validator - INFO - Extracting Akta fields...
+2025-07-27 10:02:13,449 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:02:13,786 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:13,896 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.098s]
+2025-07-27 10:02:13,897 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:02:18,208 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:02:18,209 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:02:18,222 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:02:19,683 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:21,606 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.592s]
+2025-07-27 10:02:21,610 - elasticsearch_rag - INFO - Indexed 106 chunks for document akta_20250727_100218
+2025-07-27 10:02:21,611 - document_validator - INFO - Akta validation completed. Valid: True
+2025-07-27 10:02:21,613 - document_validator - INFO - Starting comprehensive document validation...
+2025-07-27 10:02:21,613 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp.png
+2025-07-27 10:02:21,614 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:02:32,275 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:02:32,276 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:02:32,672 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:32,701 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.025s]
+2025-07-27 10:02:32,702 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:02:36,116 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:02:36,118 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:02:36,125 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:02:36,894 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:36,995 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.096s]
+2025-07-27 10:02:36,996 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_100236
+2025-07-27 10:02:36,996 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:02:36,997 - document_validator - INFO - Starting Akta validation for: D:\repo\ekyc_openai\akta.pdf
+2025-07-27 10:02:36,997 - document_validator - INFO - Extracting text from Akta PDF...
+2025-07-27 10:02:37,144 - document_validator - INFO - Extracting Akta fields...
+2025-07-27 10:02:37,172 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:02:37,528 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:37,568 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.035s]
+2025-07-27 10:02:37,569 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:02:43,371 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:02:43,375 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:02:43,387 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:02:44,642 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:02:46,202 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.317s]
+2025-07-27 10:02:46,205 - elasticsearch_rag - INFO - Indexed 106 chunks for document akta_20250727_100243
+2025-07-27 10:02:46,205 - document_validator - INFO - Akta validation completed. Valid: True
+2025-07-27 10:02:51,912 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:02:51,913 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:05:25,734 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.023s]
+2025-07-27 10:05:25,740 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:05:26,485 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:26,559 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.064s]
+2025-07-27 10:05:26,561 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:05:26,568 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:05:26,901 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:26,955 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.049s]
+2025-07-27 10:05:26,956 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:05:26,964 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:05:27,651 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:27,695 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.040s]
+2025-07-27 10:05:27,696 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:05:27,701 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:05:28,153 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:28,196 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.038s]
+2025-07-27 10:05:28,197 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:05:28,202 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:05:29,019 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:29,112 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.088s]
+2025-07-27 10:05:29,112 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:05:29,130 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.011s]
+2025-07-27 10:05:29,899 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:30,003 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.098s]
+2025-07-27 10:05:30,004 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:05:30,004 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:05:30,005 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:05:30,005 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp.png
+2025-07-27 10:05:30,006 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:05:41,008 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:05:41,009 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:05:41,382 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:41,413 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.026s]
+2025-07-27 10:05:41,414 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:05:45,006 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:05:45,019 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:05:45,024 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:05:45,401 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:45,488 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.084s]
+2025-07-27 10:05:45,488 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_100545
+2025-07-27 10:05:45,489 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:05:45,489 - document_validator - INFO - Starting Akta validation for: D:\repo\ekyc_openai\akta.pdf
+2025-07-27 10:05:45,490 - document_validator - INFO - Extracting text from Akta PDF...
+2025-07-27 10:05:45,711 - document_validator - INFO - Extracting Akta fields...
+2025-07-27 10:05:45,731 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:05:46,040 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:46,117 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.073s]
+2025-07-27 10:05:46,118 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:05:50,368 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:05:50,376 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:05:50,385 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:05:51,397 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:05:53,224 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.316s]
+2025-07-27 10:05:53,228 - elasticsearch_rag - INFO - Indexed 106 chunks for document akta_20250727_100550
+2025-07-27 10:05:53,228 - document_validator - INFO - Akta validation completed. Valid: True
+2025-07-27 10:09:19,938 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.039s]
+2025-07-27 10:09:19,946 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:09:20,707 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:20,797 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.084s]
+2025-07-27 10:09:20,797 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:09:20,805 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:09:21,635 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:21,713 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.073s]
+2025-07-27 10:09:21,714 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:09:21,723 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.008s]
+2025-07-27 10:09:22,507 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:22,557 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.047s]
+2025-07-27 10:09:22,557 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:09:22,562 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:09:23,390 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:23,623 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.037s]
+2025-07-27 10:09:23,623 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:09:23,628 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:09:24,472 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:24,617 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.142s]
+2025-07-27 10:09:24,618 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:09:24,624 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:09:24,977 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:25,121 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.140s]
+2025-07-27 10:09:25,121 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:09:25,121 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:09:25,122 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:09:25,122 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp\ktp.png
+2025-07-27 10:09:25,122 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:09:33,310 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:09:33,311 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:09:34,238 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:34,502 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.078s]
+2025-07-27 10:09:34,503 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:09:38,528 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:09:38,553 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:09:38,558 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:09:39,383 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:39,480 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.094s]
+2025-07-27 10:09:39,481 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_100938
+2025-07-27 10:09:39,481 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:09:39,482 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp\ktp1.JPG
+2025-07-27 10:09:39,483 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:09:47,380 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:09:47,381 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:09:47,827 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:47,951 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.121s]
+2025-07-27 10:09:47,952 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:09:52,856 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:09:52,858 - openai_validator - WARNING - Failed to parse JSON response, creating fallback response
+2025-07-27 10:09:52,863 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:09:53,198 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:09:53,307 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.106s]
+2025-07-27 10:09:53,307 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_100952
+2025-07-27 10:09:53,308 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:11:07,614 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.025s]
+2025-07-27 10:11:07,620 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:11:08,375 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:08,458 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.077s]
+2025-07-27 10:11:08,459 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:11:08,466 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:11:08,805 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:08,856 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.047s]
+2025-07-27 10:11:08,856 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:11:08,862 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:11:09,194 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:09,316 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.114s]
+2025-07-27 10:11:09,316 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:11:09,321 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:11:09,674 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:09,770 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.093s]
+2025-07-27 10:11:09,771 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:11:09,776 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:11:10,174 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:10,266 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.089s]
+2025-07-27 10:11:10,266 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:11:10,272 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:11:10,653 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:10,750 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.094s]
+2025-07-27 10:11:10,751 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:11:10,751 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:11:10,751 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:11:10,751 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp\ktp.png
+2025-07-27 10:11:10,752 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:11:19,109 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:11:19,109 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:11:19,756 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:19,839 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.081s]
+2025-07-27 10:11:19,840 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:11:23,932 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:11:23,944 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:11:24,831 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:25,084 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.111s]
+2025-07-27 10:11:25,085 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_101123
+2025-07-27 10:11:25,085 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:11:25,087 - document_validator - INFO - Starting KTP validation for: D:\repo\ekyc_openai\ktp\ktp1.JPG
+2025-07-27 10:11:25,088 - document_validator - INFO - Extracting text from KTP image...
+2025-07-27 10:11:33,664 - document_validator - INFO - Extracting KTP fields...
+2025-07-27 10:11:33,665 - document_validator - INFO - Getting validation context from RAG...
+2025-07-27 10:11:34,294 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:34,365 - elastic_transport.transport - INFO - POST http://localhost:9200/document_validation/_search?_source_includes=metadata,text [status:200 duration:0.068s]
+2025-07-27 10:11:34,366 - document_validator - INFO - Validating with OpenAI...
+2025-07-27 10:11:38,167 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-27 10:11:38,179 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 10:11:38,527 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:11:38,699 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.166s]
+2025-07-27 10:11:38,699 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_20250727_101138
+2025-07-27 10:11:38,699 - document_validator - INFO - KTP validation completed. Valid: False
+2025-07-27 10:30:40,571 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.066s]
+2025-07-27 10:30:40,578 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:30:41,848 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:41,914 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.061s]
+2025-07-27 10:30:41,914 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:30:41,919 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:30:42,557 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:42,628 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.067s]
+2025-07-27 10:30:42,629 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:30:42,635 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:30:43,033 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:43,147 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.111s]
+2025-07-27 10:30:43,147 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:30:43,153 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:30:44,014 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:44,313 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.114s]
+2025-07-27 10:30:44,315 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:30:44,327 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.010s]
+2025-07-27 10:30:44,792 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:44,981 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.186s]
+2025-07-27 10:30:44,981 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:30:44,987 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:30:45,403 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:30:45,508 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.102s]
+2025-07-27 10:30:45,509 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:30:45,509 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:30:45,509 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:32:40,815 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.020s]
+2025-07-27 10:32:40,825 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 10:32:41,501 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:41,730 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.223s]
+2025-07-27 10:32:41,730 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:32:41,737 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:32:42,072 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:42,218 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.140s]
+2025-07-27 10:32:42,218 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:32:42,223 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:32:42,572 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:42,721 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.144s]
+2025-07-27 10:32:42,722 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:32:42,727 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:32:43,106 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:43,199 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.090s]
+2025-07-27 10:32:43,200 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:32:43,205 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:32:43,583 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:43,700 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.106s]
+2025-07-27 10:32:43,701 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:32:43,705 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:32:44,106 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:32:44,235 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.126s]
+2025-07-27 10:32:44,236 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:32:44,236 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:32:44,236 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:32:44,248 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:32:47,777 - enhanced_ktp_processor - INFO - Generated 10 enhanced versions
+2025-07-27 10:34:12,708 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:34:18,194 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.021s]
+2025-07-27 10:34:18,199 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:34:18,596 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:18,661 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.060s]
+2025-07-27 10:34:18,662 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:34:18,669 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:34:19,004 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:19,109 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.068s]
+2025-07-27 10:34:19,109 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:34:19,115 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:34:19,468 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:19,520 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.047s]
+2025-07-27 10:34:19,520 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:34:19,524 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:34:19,884 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:19,939 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.051s]
+2025-07-27 10:34:19,939 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:34:19,944 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:34:20,834 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:20,968 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.129s]
+2025-07-27 10:34:20,969 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:34:20,975 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:34:21,306 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:34:21,408 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.098s]
+2025-07-27 10:34:21,408 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:34:21,408 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:34:21,409 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:35:44,408 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.022s]
+2025-07-27 10:35:44,414 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:35:45,059 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:45,138 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.061s]
+2025-07-27 10:35:45,138 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:35:45,147 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.008s]
+2025-07-27 10:35:45,506 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:45,601 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.090s]
+2025-07-27 10:35:45,601 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:35:45,608 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:35:45,967 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:46,070 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.098s]
+2025-07-27 10:35:46,071 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:35:46,077 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:35:46,479 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:46,564 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.082s]
+2025-07-27 10:35:46,564 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:35:46,568 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:35:46,906 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:47,049 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.139s]
+2025-07-27 10:35:47,049 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:35:47,069 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.020s]
+2025-07-27 10:35:47,484 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:35:47,605 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.119s]
+2025-07-27 10:35:47,605 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:35:47,606 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:35:47,606 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:38:01,409 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.025s]
+2025-07-27 10:38:01,422 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.011s]
+2025-07-27 10:38:02,641 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:02,925 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.108s]
+2025-07-27 10:38:02,925 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:38:02,934 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.007s]
+2025-07-27 10:38:03,845 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:04,111 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.128s]
+2025-07-27 10:38:04,112 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:38:04,123 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 10:38:04,495 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:04,650 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.150s]
+2025-07-27 10:38:04,651 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:38:04,657 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:38:05,002 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:05,106 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.100s]
+2025-07-27 10:38:05,107 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:38:05,113 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:38:05,601 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:05,705 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.098s]
+2025-07-27 10:38:05,705 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:38:05,709 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:38:06,060 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:38:06,155 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.092s]
+2025-07-27 10:38:06,155 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:38:06,156 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:38:06,156 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:38:06,170 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:38:10,440 - enhanced_ktp_processor - INFO - Generated 10 enhanced versions
+2025-07-27 10:39:01,516 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:39:06,433 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.048s]
+2025-07-27 10:39:06,438 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:39:06,799 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:06,878 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.075s]
+2025-07-27 10:39:06,879 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:39:06,886 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.006s]
+2025-07-27 10:39:07,197 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:07,280 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.078s]
+2025-07-27 10:39:07,281 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:39:07,287 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:39:07,695 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:07,829 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.095s]
+2025-07-27 10:39:07,830 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:39:07,835 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:39:08,167 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:08,221 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.049s]
+2025-07-27 10:39:08,222 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:39:08,227 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:39:09,266 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:09,365 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.095s]
+2025-07-27 10:39:09,366 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:39:09,371 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.005s]
+2025-07-27 10:39:09,743 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:39:09,839 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.093s]
+2025-07-27 10:39:09,840 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:39:09,840 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:39:09,840 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:47:58,667 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.105s]
+2025-07-27 10:47:58,677 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.009s]
+2025-07-27 10:47:59,362 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:47:59,431 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.060s]
+2025-07-27 10:47:59,432 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:47:59,437 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:47:59,784 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:47:59,856 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.060s]
+2025-07-27 10:47:59,856 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:47:59,861 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:00,221 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:00,287 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.053s]
+2025-07-27 10:48:00,287 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:48:00,291 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:01,117 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:01,207 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.073s]
+2025-07-27 10:48:01,208 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:48:01,212 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:01,530 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:01,649 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.107s]
+2025-07-27 10:48:01,649 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:48:01,653 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:02,112 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:02,235 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.113s]
+2025-07-27 10:48:02,235 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:48:02,236 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:48:02,236 - document_validator - INFO - RAG templates initialized successfully
+2025-07-27 10:48:02,286 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:48:04,790 - enhanced_ktp_processor - INFO - Generated 10 enhanced versions
+2025-07-27 10:48:41,374 - easyocr.easyocr - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-07-27 10:48:44,844 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.013s]
+2025-07-27 10:48:44,848 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:45,249 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:45,311 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.056s]
+2025-07-27 10:48:45,312 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_validation_template
+2025-07-27 10:48:45,317 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:45,643 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:45,731 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.076s]
+2025-07-27 10:48:45,732 - elasticsearch_rag - INFO - Indexed 1 chunks for document nik_validation_template
+2025-07-27 10:48:45,736 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.003s]
+2025-07-27 10:48:46,141 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:46,212 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.059s]
+2025-07-27 10:48:46,212 - elasticsearch_rag - INFO - Indexed 1 chunks for document ktp_security_template
+2025-07-27 10:48:46,216 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:46,537 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:46,599 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.054s]
+2025-07-27 10:48:46,599 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_validation_template
+2025-07-27 10:48:46,604 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:46,926 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:47,023 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.089s]
+2025-07-27 10:48:47,023 - elasticsearch_rag - INFO - Indexed 1 chunks for document akta_legal_template
+2025-07-27 10:48:47,027 - elastic_transport.transport - INFO - HEAD http://localhost:9200/document_validation [status:200 duration:0.004s]
+2025-07-27 10:48:47,319 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-07-27 10:48:47,468 - elastic_transport.transport - INFO - PUT http://localhost:9200/_bulk?refresh=true [status:200 duration:0.145s]
+2025-07-27 10:48:47,469 - elasticsearch_rag - INFO - Indexed 1 chunks for document pt_capital_template
+2025-07-27 10:48:47,469 - elasticsearch_rag - INFO - Validation templates initialized successfully
+2025-07-27 10:48:47,469 - document_validator - INFO - RAG templates initialized successfully
